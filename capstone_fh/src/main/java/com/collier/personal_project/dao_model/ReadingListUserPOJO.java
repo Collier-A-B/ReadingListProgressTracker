@@ -1,0 +1,66 @@
+package com.collier.personal_project.dao_model;
+
+import java.sql.Timestamp;
+
+/**
+ * POJO for ReadingListUser.
+ * This class stores the user information for registered users of the reading list.
+ */
+public class ReadingListUserPOJO {
+    // private fields of a user
+    private final int userId;
+    private String username;
+    private String password;
+    private final boolean isAdmin;
+    private final Timestamp createdAt;
+    private final Timestamp updatedAt;
+
+    // Constructor
+    public ReadingListUserPOJO(int userId, String username, String password, 
+                                boolean isAdmin, Timestamp createdAt, Timestamp updatedAt) {
+        this.userId = userId;
+        this.username = username;
+        this.password = password;
+        this.isAdmin = isAdmin;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt; 
+    }
+
+    // Getter for userId
+    public int getUserId() {
+        return this.userId;
+    }
+
+    // Getter & Setter for username
+    public String getUsername() {
+        return this.username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    // Getter and Setter for Password
+    public String getPassword() {
+        return this.password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    // Getter for admin flag
+    public boolean isAdmin() {
+        return this.isAdmin;
+    }
+
+    // Getter for createdAt timestamp
+    public Timestamp getCreatedAt() {
+        return this.createdAt;
+    }
+
+    // Getter for updatedAt timestamp
+    public Timestamp getUpdatedAt() {
+        return this.updatedAt;
+    }
+}
