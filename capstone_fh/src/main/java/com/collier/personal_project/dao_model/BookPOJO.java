@@ -82,4 +82,12 @@ public class BookPOJO {
         return this.updatedAt;
     }
 
+    @Override
+    public String toString() {
+        return "BookPOJO [bookId=" + bookId + ", genreId=" + genreId + ", authorId=" + authorId + ", bookTitle="
+                + bookTitle + ", publishDate=" + publishDate + ", isbn_13=" + isbn_13 + ", createdAt=" + createdAt
+                + ", updatedAt=" + updatedAt + "]";
+    }
+
+    
 }

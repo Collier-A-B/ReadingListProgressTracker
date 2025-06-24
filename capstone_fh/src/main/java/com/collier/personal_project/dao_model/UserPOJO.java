@@ -72,4 +72,12 @@ public class UserPOJO {
     public Timestamp getUpdatedAt() {
         return this.updatedAt;
     }
+
+    @Override
+    public String toString() {
+        return "UserPOJO [userId=" + userId + ", username=" + username + ", password=" + password + ", isAdmin="
+                + isAdmin + ", createdAt=" + createdAt + ", updatedAt=" + updatedAt + "]";
+    }
+
+    
 }

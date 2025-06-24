@@ -39,5 +39,11 @@ public class GenrePOJO {
         return updatedAt;
     }
 
+    @Override
+    public String toString() {
+        return "GenrePOJO [genreId=" + genreId + ", genreName=" + genreName + ", createdAt=" + createdAt
+                + ", updatedAt=" + updatedAt + "]";
+    }
+
     
 }

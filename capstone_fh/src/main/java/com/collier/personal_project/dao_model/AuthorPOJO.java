@@ -44,5 +44,11 @@ public class AuthorPOJO {
         return updatedAt;
     }
 
+    @Override
+    public String toString() {
+        return "AuthorPOJO [authorId=" + authorId + ", authorName=" + authorName + ", createdAt=" + createdAt
+                + ", updatedAt=" + updatedAt + "]";
+    }
+
     
 }
