@@ -15,7 +15,7 @@ public interface UsersDAOInterface {
 
     public boolean addUser(String username, String password);
     
-    public boolean updateUserByUsername(String username, String password);
+    public boolean updateUserById(int id, String username, String pasword);
 
     public boolean deleteUserById(int id);
     public boolean deleteUserByUsername(String username);
