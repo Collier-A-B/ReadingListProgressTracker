@@ -2,13 +2,13 @@ package com.collier.personal_project.dao_model;
 
 import java.sql.Timestamp;
 
-public class ReadingListGenrePOJO {
+public class GenrePOJO {
     private final int genreId;
     private String genreName;
     private final Timestamp createdAt;
     private final Timestamp updatedAt;
 
-    public ReadingListGenrePOJO(int genreId, String genreName, Timestamp createdAt, Timestamp updatedAt){
+    public GenrePOJO(int genreId, String genreName, Timestamp createdAt, Timestamp updatedAt){
         this.genreId = genreId;
         this.genreName = genreName;
         this.createdAt = createdAt;

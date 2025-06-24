@@ -6,7 +6,7 @@ import java.sql.Timestamp;
  * POJO for ReadingList User.
  * This class stores the user information for registered users of the reading list.
  */
-public class ReadingListUserPOJO {
+public class UserPOJO {
     // private fields of a user
     private final int userId;
     private String username;
@@ -16,7 +16,7 @@ public class ReadingListUserPOJO {
     private final Timestamp updatedAt;
 
     // Constructor
-    public ReadingListUserPOJO(int userId, String username, String password, 
+    public UserPOJO(int userId, String username, String password, 
                                  Timestamp createdAt, Timestamp updatedAt) {
         this.userId = userId;
         this.username = username;

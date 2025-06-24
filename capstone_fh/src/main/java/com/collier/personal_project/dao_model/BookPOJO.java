@@ -3,7 +3,7 @@ package com.collier.personal_project.dao_model;
 import java.sql.Date;
 import java.sql.Timestamp;
 
-public class ReadingListBookPOJO {
+public class BookPOJO {
     private final int bookId;
     private int genreId;
     private int authorId;
@@ -13,7 +13,7 @@ public class ReadingListBookPOJO {
     private final Timestamp createdAt;
     private final Timestamp updatedAt;
 
-    public ReadingListBookPOJO(int authorId, int bookId, String bookTitle, Timestamp createdAt, 
+    public BookPOJO(int authorId, int bookId, String bookTitle, Timestamp createdAt, 
                                 int genreId, String isbn_13, Date publishDate, Timestamp updatedAt) {
         this.authorId = authorId;
         this.bookId = bookId;

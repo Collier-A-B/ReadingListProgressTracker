@@ -6,14 +6,14 @@ import java.sql.Timestamp;
     POJO for ReadingList Author
     This class stores the author information for an book author
  */
-public class ReadingListAuthorPOJO {
+public class AuthorPOJO {
     // private fields
     private final int authorId;
     private String authorName;
     private final Timestamp createdAt;
     private final Timestamp updatedAt;
 
-    public ReadingListAuthorPOJO(int authorId, String authorName, Timestamp createdAt, Timestamp updatedAt) {
+    public AuthorPOJO(int authorId, String authorName, Timestamp createdAt, Timestamp updatedAt) {
         this.authorId = authorId;
         this.authorName = authorName;
         this.createdAt = createdAt;
