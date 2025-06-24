@@ -6,8 +6,9 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.time.chrono.ThaiBuddhistChronology;
 import java.util.Properties;
+
+import com.collier.personal_project.custom_exceptions.DBReturnNullException;
 
 /**
  * ConnectionManager is responsible for managing database connections.
@@ -23,13 +24,21 @@ public class ConnectionManager {
 
     private static void makeConnection() throws FileNotFoundException, IOException, ClassNotFoundException, SQLException {
         Properties properties = new Properties();
-        properties.load(new FileInputStream(""));
+        properties.load(new FileInputStream("capstone_fh/resources/config.properties"));
 
         String url = properties.getProperty("db.url");
-        String user = properties.getProperty("db.user");
+        String user = properties.getProperty("db.username");
         String password = properties.getProperty("db.password");
 
-        Class.forName();
+        Class.forName("com.mysql.cj.jdbc.Driver");
         connection = DriverManager.getConnection(url, user, password);
+    }
+
+    public static Connection getConnection() throws FileNotFoundException, IOException, ClassNotFoundException, SQLException, DBReturnNullException {
+        if (connection == null) {
+            makeConnection();
+            return connection;
+        }
+        throw new DBReturnNullException();
     }
 }
