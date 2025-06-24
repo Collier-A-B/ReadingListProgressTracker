@@ -13,6 +13,7 @@ import com.collier.personal_project.custom_exceptions.DBReturnNullException;
  */
 public class App {
     public static void main(String[] args) {
+        // Test DB Connection
         try {
             Connection dbConnection = ConnectionManager.getConnection();
             System.out.println("Connection established successfully: " + dbConnection.getCatalog());

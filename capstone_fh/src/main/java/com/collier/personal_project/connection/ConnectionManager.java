@@ -1,8 +1,8 @@
 package com.collier.personal_project.connection;
 
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -24,7 +24,13 @@ public class ConnectionManager {
 
     private static void makeConnection() throws FileNotFoundException, IOException, ClassNotFoundException, SQLException {
         Properties properties = new Properties();
-        properties.load(new FileInputStream("capstone_fh/resources/config.properties"));
+        
+        try (InputStream input = ConnectionManager.class.getClassLoader().getResourceAsStream("config.properties")){
+            if (input == null) {
+                throw new FileNotFoundException("config.properties not found in classpath");
+            }
+            properties.load(input);
+        } 
 
         String url = properties.getProperty("db.url");
         String user = properties.getProperty("db.username");
