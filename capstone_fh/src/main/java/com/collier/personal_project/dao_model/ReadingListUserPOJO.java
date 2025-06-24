@@ -3,7 +3,7 @@ package com.collier.personal_project.dao_model;
 import java.sql.Timestamp;
 
 /**
- * POJO for ReadingListUser.
+ * POJO for ReadingList User.
  * This class stores the user information for registered users of the reading list.
  */
 public class ReadingListUserPOJO {
