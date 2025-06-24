@@ -11,17 +11,17 @@ public class ReadingListUserPOJO {
     private final int userId;
     private String username;
     private String password;
-    private final boolean isAdmin;
+    private boolean isAdmin;
     private final Timestamp createdAt;
     private final Timestamp updatedAt;
 
     // Constructor
     public ReadingListUserPOJO(int userId, String username, String password, 
-                                boolean isAdmin, Timestamp createdAt, Timestamp updatedAt) {
+                                 Timestamp createdAt, Timestamp updatedAt) {
         this.userId = userId;
         this.username = username;
         this.password = password;
-        this.isAdmin = isAdmin;
+        this.isAdmin = false;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt; 
     }
@@ -52,6 +52,15 @@ public class ReadingListUserPOJO {
     // Getter for admin flag
     public boolean isAdmin() {
         return this.isAdmin;
+    }
+
+    // Setters for adminFlag
+    public void grantAdmin() {
+        this.isAdmin = true;
+    }
+
+    public void revokeAdmin() {
+        this.isAdmin = false;
     }
 
     // Getter for createdAt timestamp
