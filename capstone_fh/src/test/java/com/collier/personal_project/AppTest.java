@@ -55,4 +55,9 @@ public class AppTest {
             System.out.println("result:   " + "name--" + author.getAuthorName() + ", id--" + author.getAuthorId());
         }
     }
+
+    @Test
+    public void getAuthorById() {
+        
+    }
 }

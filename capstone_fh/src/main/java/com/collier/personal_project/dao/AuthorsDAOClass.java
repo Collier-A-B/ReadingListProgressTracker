@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.collier.personal_project.connection.ConnectionManager;
+import com.collier.personal_project.custom_exceptions.AuthorNotFoundException;
 import com.collier.personal_project.custom_exceptions.DBReturnNullConnectionException;
 import com.collier.personal_project.dao_model.AuthorPOJO;
 
@@ -79,7 +80,32 @@ public class AuthorsDAOClass implements AuthorsDAOInterface{
 
     @Override
     public AuthorPOJO getAuthorById(int id) {
-        // TODO Auto-generated method stub
+        AuthorPOJO author;
+
+        try {
+            dbConnection = ConnectionManager.getConnection();
+            System.out.println("Connection established successfully: " + dbConnection.getCatalog());
+
+            String sql = "SELECT * FROM authors WHERE author_id = ?";
+            PreparedStatement ps = dbConnection.prepareStatement(sql);
+            ps.setInt(1, id);
+
+            ResultSet rs = ps.executeQuery();
+            
+            if (rs.next())
+                author = new AuthorPOJO(id, 
+                                        rs.getString("name"), 
+                                        rs.getTimestamp("created_at"), 
+                                        rs.getTimestamp("updated_at"));
+            else
+                throw new AuthorNotFoundException();
+            return author;
+        } catch(AuthorNotFoundException e){
+            System.err.println("getAuthorById threw AuthorNotFound Exception: " + e.getMessage());
+        }catch (Exception e) {
+
+        }
+
         return null;
     }
 
