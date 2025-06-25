@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" version="3.0.1" name="com.collier.personal_project.AppTest" time="0.235" tests="2" errors="1" skipped="0" failures="0">
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" version="3.0.1" name="com.collier.personal_project.AppTest" time="0.244" tests="2" errors="0" skipped="0" failures="0">
   <properties>
     <property name="java.specification.version" value="21"/>
     <property name="sun.jnu.encoding" value="UTF-8"/>
@@ -12,7 +12,7 @@
     <property name="java.vm.specification.version" value="21"/>
     <property name="sun.java.launcher" value="SUN_STANDARD"/>
     <property name="sun.boot.library.path" value="/usr/lib/jvm/java-21-openjdk-amd64/lib"/>
-    <property name="sun.java.command" value="/home/devcontainers/LinuxProjects/PersonalProjects/JavaWorkspace/ReadingListProgressTracker/ReadingListProgressTracker/capstone_fh/target/surefire/surefirebooter-20250625144752725_3.jar /home/devcontainers/LinuxProjects/PersonalProjects/JavaWorkspace/ReadingListProgressTracker/ReadingListProgressTracker/capstone_fh/target/surefire 2025-06-25T14-47-52_666-jvmRun1 surefire-20250625144752725_1tmp surefire_0-20250625144752725_2tmp"/>
+    <property name="sun.java.command" value="/home/devcontainers/LinuxProjects/PersonalProjects/JavaWorkspace/ReadingListProgressTracker/ReadingListProgressTracker/capstone_fh/target/surefire/surefirebooter-20250625151133392_3.jar /home/devcontainers/LinuxProjects/PersonalProjects/JavaWorkspace/ReadingListProgressTracker/ReadingListProgressTracker/capstone_fh/target/surefire 2025-06-25T15-11-33_342-jvmRun1 surefire-20250625151133392_1tmp surefire_0-20250625151133392_2tmp"/>
     <property name="jdk.debug" value="release"/>
     <property name="test" value="com.collier.personal_project.AppTest"/>
     <property name="surefire.test.class.path" value="/home/devcontainers/LinuxProjects/PersonalProjects/JavaWorkspace/ReadingListProgressTracker/ReadingListProgressTracker/capstone_fh/target/test-classes:/home/devcontainers/LinuxProjects/PersonalProjects/JavaWorkspace/ReadingListProgressTracker/ReadingListProgressTracker/capstone_fh/target/classes:/home/devcontainers/.m2/repository/org/junit/jupiter/junit-jupiter-api/5.11.0/junit-jupiter-api-5.11.0.jar:/home/devcontainers/.m2/repository/org/opentest4j/opentest4j/1.3.0/opentest4j-1.3.0.jar:/home/devcontainers/.m2/repository/org/junit/platform/junit-platform-commons/1.11.0/junit-platform-commons-1.11.0.jar:/home/devcontainers/.m2/repository/org/apiguardian/apiguardian-api/1.1.2/apiguardian-api-1.1.2.jar:/home/devcontainers/.m2/repository/org/junit/jupiter/junit-jupiter-params/5.11.0/junit-jupiter-params-5.11.0.jar:/home/devcontainers/.m2/repository/com/mysql/mysql-connector-j/9.3.0/mysql-connector-j-9.3.0.jar:/home/devcontainers/.m2/repository/com/google/protobuf/protobuf-java/4.29.0/protobuf-java-4.29.0.jar:"/>
@@ -28,7 +28,7 @@
     <property name="line.separator" value="&#10;"/>
     <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
     <property name="java.specification.name" value="Java Platform API Specification"/>
-    <property name="surefire.real.class.path" value="/home/devcontainers/LinuxProjects/PersonalProjects/JavaWorkspace/ReadingListProgressTracker/ReadingListProgressTracker/capstone_fh/target/surefire/surefirebooter-20250625144752725_3.jar"/>
+    <property name="surefire.real.class.path" value="/home/devcontainers/LinuxProjects/PersonalProjects/JavaWorkspace/ReadingListProgressTracker/ReadingListProgressTracker/capstone_fh/target/surefire/surefirebooter-20250625151133392_3.jar"/>
     <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
     <property name="java.runtime.version" value="21.0.7+6-Ubuntu-0ubuntu124.04"/>
     <property name="user.name" value="devcontainers"/>
@@ -55,13 +55,7 @@
     <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
     <property name="java.class.version" value="65.0"/>
   </properties>
-  <testcase name="getAllAuthors" classname="com.collier.personal_project.AppTest" time="0.221">
-    <error message="Index 1 out of bounds for length 1" type="java.lang.ArrayIndexOutOfBoundsException"><![CDATA[java.lang.ArrayIndexOutOfBoundsException: Index 1 out of bounds for length 1
-	at com.collier.personal_project.AppTest.getAllAuthors(AppTest.java:93)
-	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
-	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
-	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
-]]></error>
+  <testcase name="getAllAuthors" classname="com.collier.personal_project.AppTest" time="0.233">
     <system-out><![CDATA[Connection Created
 Connection established successfully: progress_tracker
 
@@ -70,11 +64,17 @@ Connection established successfully: progress_tracker
 Printing all authors in db
 
 result:   name--George Orwell, id--1
-expected: name--George Orwell, id--1
 result:   name--J.K. Rowling, id--2
+result:   name--J.R.R. Tolkien, id--3
+result:   name--Agatha Christie, id--4
+result:   name--Isaac Asimov, id--5
+result:   name--Gillian Flynn, id--6
+result:   name--Christopher Clark, id--7
+result:   name--Lewis Carroll, id--8
+result:   name--Aldous Huxley, id--9
 ]]></system-out>
   </testcase>
-  <testcase name="connectToDB" classname="com.collier.personal_project.AppTest" time="0.002">
+  <testcase name="connectToDB" classname="com.collier.personal_project.AppTest" time="0.001">
     <system-out><![CDATA[Connection established successfully: progress_tracker
 ]]></system-out>
   </testcase>

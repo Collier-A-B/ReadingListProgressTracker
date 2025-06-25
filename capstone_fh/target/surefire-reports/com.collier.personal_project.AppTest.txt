@@ -1,11 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: com.collier.personal_project.AppTest
 -------------------------------------------------------------------------------
-Tests run: 2, Failures: 0, Errors: 1, Skipped: 0, Time elapsed: 0.235 s <<< FAILURE! -- in com.collier.personal_project.AppTest
-com.collier.personal_project.AppTest.getAllAuthors -- Time elapsed: 0.221 s <<< ERROR!
-java.lang.ArrayIndexOutOfBoundsException: Index 1 out of bounds for length 1
-	at com.collier.personal_project.AppTest.getAllAuthors(AppTest.java:93)
-	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
-	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
-	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
-
+Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.244 s -- in com.collier.personal_project.AppTest

@@ -33,7 +33,6 @@ public class App {
             System.err.println("Database connection returned null: " + e.getMessage());
         }
         catch (Exception e) {
-            e.printStackTrace();
         }
     }
 }
