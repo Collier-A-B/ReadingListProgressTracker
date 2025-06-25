@@ -8,7 +8,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Properties;
 
-import com.collier.personal_project.custom_exceptions.DBReturnNullException;
+import com.collier.personal_project.custom_exceptions.DBReturnNullConnectionException;
 
 /**
  * ConnectionManager is responsible for managing database connections.
@@ -22,7 +22,7 @@ public class ConnectionManager {
         // Private constructor to prevent instantiation
     }
 
-    private static void makeConnection() throws FileNotFoundException, IOException, ClassNotFoundException, SQLException {
+    private static void makeConnection() throws FileNotFoundException, IOException, ClassNotFoundException, SQLException, DBReturnNullConnectionException {
         Properties properties = new Properties();
         
         try (InputStream input = ConnectionManager.class.getClassLoader().getResourceAsStream("config.properties")){
@@ -38,13 +38,16 @@ public class ConnectionManager {
 
         Class.forName("com.mysql.cj.jdbc.Driver");
         connection = DriverManager.getConnection(url, user, password);
+        if (connection == null)
+            throw new DBReturnNullConnectionException();
     }
 
-    public static Connection getConnection() throws FileNotFoundException, IOException, ClassNotFoundException, SQLException, DBReturnNullException {
+    public static Connection getConnection() throws FileNotFoundException, IOException, 
+                                                ClassNotFoundException, SQLException, DBReturnNullConnectionException {
         if (connection == null) {
             makeConnection();
-            return connection;
+            System.out.println("Connection Created");
         }
-        throw new DBReturnNullException();
+        return connection;
     }
 }

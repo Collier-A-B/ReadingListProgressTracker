@@ -6,7 +6,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 import com.collier.personal_project.connection.ConnectionManager;
-import com.collier.personal_project.custom_exceptions.DBReturnNullException;
+import com.collier.personal_project.custom_exceptions.DBReturnNullConnectionException;
 
 /**
  * Hello world!
@@ -29,7 +29,7 @@ public class App {
         } 
         catch (IOException e) {
             System.err.println("I/O Exception: " + e.getMessage());
-        } catch (DBReturnNullException e) {
+        } catch (DBReturnNullConnectionException e) {
             System.err.println("Database connection returned null: " + e.getMessage());
         }
         catch (Exception e) {
