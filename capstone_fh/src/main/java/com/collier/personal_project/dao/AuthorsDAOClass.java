@@ -70,9 +70,6 @@ public class AuthorsDAOClass implements AuthorsDAOInterface{
             System.err.println("getAllAuthors threw a SQLException: " + e.getMessage());
         } catch(DBReturnNullConnectionException e) {
             System.err.println("getAllAuthors threw a DBReturnNullConnectionException: " + e.getMessage());
-        } catch (Exception e) {
-            System.err.println("getAllAuthors threw an unknown exception: " + e.getMessage());
-            e.printStackTrace();
         }
 
         return null;
@@ -100,10 +97,16 @@ public class AuthorsDAOClass implements AuthorsDAOInterface{
             else
                 throw new AuthorNotFoundException();
             return author;
-        } catch(AuthorNotFoundException e){
-            System.err.println("getAuthorById threw AuthorNotFound Exception: " + e.getMessage());
-        }catch (Exception e) {
-
+        } catch (DBReturnNullConnectionException e) {
+            System.err.println("getAuthorById threw a DBReturnNullConnectionException: " + e.getMessage());
+        }catch (SQLException e) {
+            System.err.println("getAuthorById threw a SQLException: " + e.getMessage());
+        } catch (FileNotFoundException e) {
+            System.err.println("getAuthorById threw a FileNotFoundException: " + e.getMessage());
+        } catch (IOException e) {
+            System.err.println("getAuthorById threw a IOException: " + e.getMessage());
+        } catch (ClassNotFoundException e) {
+            System.err.println("getAuthorById threw a ClassNotFoundException: " + e.getMessage());
         }
 
         return null;
@@ -111,7 +114,38 @@ public class AuthorsDAOClass implements AuthorsDAOInterface{
 
     @Override
     public AuthorPOJO getAuthorByName(String name) {
-        // TODO Auto-generated method stub
+        AuthorPOJO author;
+
+        try {
+            dbConnection = ConnectionManager.getConnection();
+            System.out.println("Connection established successfully: " + dbConnection.getCatalog());
+
+            String sql = "SELECT * FROM authors WHERE author_id = ?";
+            PreparedStatement ps = dbConnection.prepareStatement(sql);
+            ps.setString(1, name);
+
+            ResultSet rs = ps.executeQuery();
+            
+            if (rs.next())
+                author = new AuthorPOJO(rs.getInt("author_id"), 
+                                        name, 
+                                        rs.getTimestamp("created_at"), 
+                                        rs.getTimestamp("updated_at"));
+            else
+                throw new AuthorNotFoundException();
+            return author;
+        } catch (DBReturnNullConnectionException e) {
+            System.err.println("getAuthorById threw a DBReturnNullConnectionException: " + e.getMessage());
+        }catch (SQLException e) {
+            System.err.println("getAuthorById threw a SQLException: " + e.getMessage());
+        } catch (FileNotFoundException e) {
+            System.err.println("getAuthorById threw a FileNotFoundException: " + e.getMessage());
+        } catch (IOException e) {
+            System.err.println("getAuthorById threw a IOException: " + e.getMessage());
+        } catch (ClassNotFoundException e) {
+            System.err.println("getAuthorById threw a ClassNotFoundException: " + e.getMessage());
+        }
+
         return null;
     }
 
