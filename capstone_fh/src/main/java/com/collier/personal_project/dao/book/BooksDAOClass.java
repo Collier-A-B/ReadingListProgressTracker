@@ -108,28 +108,100 @@ public class BooksDAOClass implements BooksDAOInterface{
                 throw new BookNotFoundException();
             return book;
         } catch (DBReturnNullConnectionException e) {
-            System.err.println("getAuthorById threw a DBReturnNullConnectionException: " + e.getMessage());
+            System.err.println("getBookByISBN threw a DBReturnNullConnectionException: " + e.getMessage());
         } catch (SQLException e) {
-            System.err.println("getAuthorById threw a SQLException: " + e.getMessage());
+            System.err.println("getBookByISBN threw a SQLException: " + e.getMessage());
         } catch (FileNotFoundException e) {
-            System.err.println("getAuthorById threw a FileNotFoundException: " + e.getMessage());
+            System.err.println("getBookByISBN threw a FileNotFoundException: " + e.getMessage());
         } catch (IOException e) {
-            System.err.println("getAuthorById threw a IOException: " + e.getMessage());
+            System.err.println("getBookByISBN threw a IOException: " + e.getMessage());
         } catch (ClassNotFoundException e) {
-            System.err.println("getAuthorById threw a ClassNotFoundException: " + e.getMessage());
+            System.err.println("getBookByISBN threw a ClassNotFoundException: " + e.getMessage());
         }
         return null;
     }
 
     @Override
-    public BookPOJO getBookById() {
-        // TODO Auto-generated method stub
+    public BookPOJO getBookById(int id) {
+        BookPOJO book;
+
+        try {
+            dbConnection = ConnectionManager.getConnection();
+            System.out.println("Connection established successfully: " + dbConnection.getCatalog());
+
+            String sql = "SELECT * FROM books WHERE book_id = ?";
+            PreparedStatement ps = dbConnection.prepareStatement(sql);
+            ps.setInt(1, id);
+
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next())
+                book = new BookPOJO(rs.getInt("author_id"),
+                            id,
+                            rs.getString("title"),
+                            rs.getTimestamp("created_at"),
+                            rs.getInt("genre_id"),
+                            rs.getString("isbn_13"),
+                            rs.getDate("publication_date"),
+                            rs.getTimestamp("updated_at")
+                        );
+            else
+                throw new BookNotFoundException();
+            return book;
+        } catch (DBReturnNullConnectionException e) {
+            System.err.println("getBookById threw a DBReturnNullConnectionException: " + e.getMessage());
+        } catch (SQLException e) {
+            System.err.println("getBookById threw a SQLException: " + e.getMessage());
+        } catch (FileNotFoundException e) {
+            System.err.println("getBookById threw a FileNotFoundException: " + e.getMessage());
+        } catch (IOException e) {
+            System.err.println("getBookById threw a IOException: " + e.getMessage());
+        } catch (ClassNotFoundException e) {
+            System.err.println("getBookById threw a ClassNotFoundException: " + e.getMessage());
+        }
         return null;
     }
 
     @Override
-    public List<BookPOJO> getBooksByTitle() {
-        // TODO Auto-generated method stub
+    public List<BookPOJO> getBooksByTitle(String title) {
+        List<BookPOJO> books = new ArrayList<>();
+
+        try {
+            dbConnection = ConnectionManager.getConnection();
+            System.out.println("Connection established successfully: " + dbConnection.getCatalog());
+
+            String sql = "SELECT * FROM books WHERE title = ?";
+            PreparedStatement ps = dbConnection.prepareStatement(sql);
+            ps.setString(1, title);
+
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()){
+                int authorId = rs.getInt("author_id");
+                int bookId = rs.getInt("book_id");
+                Timestamp createdAt = rs.getTimestamp("created_at");
+                int genreId = rs.getInt("genre_id");
+                String isbn13 = rs.getString("isbn_13");
+                Date publishDate = rs.getDate("publication_date");
+                Timestamp updatedAt = rs.getTimestamp("updated_at");
+                
+                BookPOJO book = new BookPOJO(authorId, bookId, title, 
+                                createdAt, genreId, isbn13, publishDate, updatedAt);
+                books.add(book);
+            }
+            
+            return books;
+        } catch (DBReturnNullConnectionException e) {
+            System.err.println("getBookByISBN threw a DBReturnNullConnectionException: " + e.getMessage());
+        } catch (SQLException e) {
+            System.err.println("getBookByISBN threw a SQLException: " + e.getMessage());
+        } catch (FileNotFoundException e) {
+            System.err.println("getBookByISBN threw a FileNotFoundException: " + e.getMessage());
+        } catch (IOException e) {
+            System.err.println("getBookByISBN threw a IOException: " + e.getMessage());
+        } catch (ClassNotFoundException e) {
+            System.err.println("getBookByISBN threw a ClassNotFoundException: " + e.getMessage());
+        }
         return null;
     }
 
