@@ -151,7 +151,33 @@ public class AuthorsDAOClass implements AuthorsDAOInterface{
 
     @Override
     public boolean updateAuthorById(int id, String name) {
-        // TODO Auto-generated method stub
+        try {
+            dbConnection = ConnectionManager.getConnection();
+            System.out.println("Connection established successfully: " + dbConnection.getCatalog());
+
+            String sql = "UPDATE authors SET name = ? WHERE author_id = ?";
+            PreparedStatement ps = dbConnection.prepareStatement(sql);
+            ps.setString(1, name);
+            ps.setInt(2, id);
+
+            int rowsUpdated = ps.executeUpdate();
+            if (rowsUpdated == 0) {
+                throw new AuthorNotFoundException();
+            }
+            else {
+                return true;
+            }
+        } catch (DBReturnNullConnectionException e) {
+            System.err.println("updateAuthorById threw a DBReturnNullConnectionException: " + e.getMessage());
+        }catch (SQLException e) {
+            System.err.println("updateAuthorById threw a SQLException: " + e.getMessage());
+        } catch (FileNotFoundException e) {
+            System.err.println("updateAuthorById threw a FileNotFoundException: " + e.getMessage());
+        } catch (IOException e) {
+            System.err.println("updateAuthorById threw a IOException: " + e.getMessage());
+        } catch (ClassNotFoundException e) {
+            System.err.println("updateAuthorById threw a ClassNotFoundException: " + e.getMessage());
+        }
         return false;
     }
 
