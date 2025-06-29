@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.collier.personal_project.connection.ConnectionManager;
+import com.collier.personal_project.custom_exceptions.AuthorNotCreatedException;
 import com.collier.personal_project.custom_exceptions.AuthorNotFoundException;
 import com.collier.personal_project.custom_exceptions.DBReturnNullConnectionException;
 import com.collier.personal_project.dao_model.AuthorPOJO;
@@ -21,8 +22,33 @@ public class AuthorsDAOClass implements AuthorsDAOInterface{
     private Connection dbConnection;
 
     @Override
-    public boolean addAuthor(String name) {
-        // TODO Auto-generated method stub
+    public boolean addAuthor(String name) throws AuthorNotCreatedException{
+        try {
+            dbConnection = ConnectionManager.getConnection();
+            System.out.println("Connection established successfully: " + dbConnection.getCatalog());
+
+            String sql = "INSERT INTO authors(name) VALUES(?)";
+            PreparedStatement ps = dbConnection.prepareStatement(sql);
+            ps.setString(1, name);
+
+            int rowsUpdated = ps.executeUpdate();
+            if (rowsUpdated == 0) {
+                throw new AuthorNotCreatedException();
+            }
+            else {
+                return true;
+            }
+        } catch (DBReturnNullConnectionException e) {
+            System.err.println("updateAuthorById threw a DBReturnNullConnectionException: " + e.getMessage());
+        }catch (SQLException e) {
+            System.err.println("updateAuthorById threw a SQLException: " + e.getMessage());
+        } catch (FileNotFoundException e) {
+            System.err.println("updateAuthorById threw a FileNotFoundException: " + e.getMessage());
+        } catch (IOException e) {
+            System.err.println("updateAuthorById threw a IOException: " + e.getMessage());
+        } catch (ClassNotFoundException e) {
+            System.err.println("updateAuthorById threw a ClassNotFoundException: " + e.getMessage());
+        }
         return false;
     }
 
@@ -76,7 +102,7 @@ public class AuthorsDAOClass implements AuthorsDAOInterface{
     }
 
     @Override
-    public AuthorPOJO getAuthorById(int id) {
+    public AuthorPOJO getAuthorById(int id) throws AuthorNotFoundException{
         AuthorPOJO author;
 
         try {
@@ -113,7 +139,7 @@ public class AuthorsDAOClass implements AuthorsDAOInterface{
     }
 
     @Override
-    public AuthorPOJO getAuthorByName(String name) {
+    public AuthorPOJO getAuthorByName(String name)throws AuthorNotFoundException {
         AuthorPOJO author;
 
         try {
@@ -150,7 +176,7 @@ public class AuthorsDAOClass implements AuthorsDAOInterface{
     }
 
     @Override
-    public boolean updateAuthorById(int id, String name) {
+    public boolean updateAuthorById(int id, String name) throws AuthorNotFoundException{
         try {
             dbConnection = ConnectionManager.getConnection();
             System.out.println("Connection established successfully: " + dbConnection.getCatalog());
