@@ -1,4 +1,4 @@
-package com.collier.personal_project.dao;
+package com.collier.personal_project.dao.genre;
 
 import java.util.List;
 

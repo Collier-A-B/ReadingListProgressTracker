@@ -1,4 +1,4 @@
-package com.collier.personal_project.dao;
+package com.collier.personal_project.dao.book;
 
 import java.sql.Date;
 import java.util.List;
