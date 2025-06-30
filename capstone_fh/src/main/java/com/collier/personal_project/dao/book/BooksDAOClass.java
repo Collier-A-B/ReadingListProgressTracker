@@ -19,7 +19,9 @@ import com.collier.personal_project.custom_exceptions.DBReturnNullConnectionExce
 import com.collier.personal_project.custom_exceptions.GenreNotFoundException;
 import com.collier.personal_project.dao.author.AuthorsDAOClass;
 import com.collier.personal_project.dao.genre.GenreDAOClass;
+import com.collier.personal_project.dao_model.AuthorPOJO;
 import com.collier.personal_project.dao_model.BookPOJO;
+import com.collier.personal_project.dao_model.GenrePOJO;
 
 public class BooksDAOClass implements BooksDAOInterface{
 
@@ -29,15 +31,19 @@ public class BooksDAOClass implements BooksDAOInterface{
     // private helper methods
 
     private int getBookGenreId(String genreName) throws GenreNotFoundException{
-        GenreDAOClass genre = new GenreDAOClass();
-
-        return genre.getGenreByName(genreName).getGenreId();
+        GenreDAOClass genreDAO = new GenreDAOClass();
+        GenrePOJO genre = genreDAO.getGenreByName(genreName);
+        if (genre == null)
+            throw new GenreNotFoundException();
+        return genre.getGenreId();
     }
 
     private int getBookAuthorId(String authorName) throws AuthorNotFoundException {
-        AuthorsDAOClass author = new AuthorsDAOClass();
-
-        return author.getAuthorByName(authorName).getAuthorId();
+        AuthorsDAOClass authorDAO = new AuthorsDAOClass();
+        AuthorPOJO author = authorDAO.getAuthorByName(authorName);
+        if (author == null)
+            throw new AuthorNotFoundException();
+        return author.getAuthorId();
     }
 
     // interface method implementations
@@ -78,6 +84,8 @@ public class BooksDAOClass implements BooksDAOInterface{
             System.err.println("addBook threw a IOException: " + e.getMessage());
         } catch (ClassNotFoundException e) {
             System.err.println("addBook threw a ClassNotFoundException: " + e.getMessage());
+        } catch (BookNotCreatedException e) {
+            System.err.println("addBook threw a BookNotCreatedException: " + e.getMessage());
         }
         return false;
     }
@@ -108,6 +116,8 @@ public class BooksDAOClass implements BooksDAOInterface{
             System.err.println("deleteBookById threw a IOException: " + e.getMessage());
         } catch (ClassNotFoundException e) {
             System.err.println("deleteBookById threw a ClassNotFoundException: " + e.getMessage());
+        } catch (BookNotFoundException e) {
+            System.err.println("deleteBookById threw a BookNotFoundException: " + e.getMessage());
         }
         return false;
     }
@@ -138,6 +148,8 @@ public class BooksDAOClass implements BooksDAOInterface{
             System.err.println("deleteBookById threw a IOException: " + e.getMessage());
         } catch (ClassNotFoundException e) {
             System.err.println("deleteBookById threw a ClassNotFoundException: " + e.getMessage());
+        } catch (BookNotFoundException e) {
+            System.err.println("deleteBookById threw a BookNotFoundException: " + e.getMessage());
         }
         return false;
     }
@@ -220,6 +232,8 @@ public class BooksDAOClass implements BooksDAOInterface{
             System.err.println("getBookByISBN threw a IOException: " + e.getMessage());
         } catch (ClassNotFoundException e) {
             System.err.println("getBookByISBN threw a ClassNotFoundException: " + e.getMessage());
+        } catch (BookNotFoundException e) {
+            System.err.println("deleteBookById threw a BookNotFoundException: " + e.getMessage());
         }
         return null;
     }
@@ -261,6 +275,8 @@ public class BooksDAOClass implements BooksDAOInterface{
             System.err.println("getBookById threw a IOException: " + e.getMessage());
         } catch (ClassNotFoundException e) {
             System.err.println("getBookById threw a ClassNotFoundException: " + e.getMessage());
+        } catch (BookNotFoundException e) {
+            System.err.println("deleteBookById threw a BookNotFoundException: " + e.getMessage());
         }
         return null;
     }
@@ -327,7 +343,7 @@ public class BooksDAOClass implements BooksDAOInterface{
 
             int rowsUpdated = ps.executeUpdate();
             if (rowsUpdated == 0) {
-                throw new AuthorNotFoundException();
+                throw new BookNotFoundException();
             } else {
                 return true;
             }
@@ -341,13 +357,56 @@ public class BooksDAOClass implements BooksDAOInterface{
             System.err.println("updateAuthorById threw a IOException: " + e.getMessage());
         } catch (ClassNotFoundException e) {
             System.err.println("updateAuthorById threw a ClassNotFoundException: " + e.getMessage());
+        } catch (BookNotFoundException e) {
+            System.err.println("deleteBookById threw a BookNotFoundException: " + e.getMessage());
+        } catch (GenreNotFoundException e) {
+            System.err.println("deleteBookById threw a GenreNotFoundException: " + e.getMessage());
+        } catch (AuthorNotFoundException e) {
+            System.err.println("deleteBookById threw a AuthorNotFoundException: " + e.getMessage());
         }
         return false;
     }
 
     @Override
     public boolean updateBookByIsbn13(String title, Date publishDate, String isbn_13, String genre, String author) {
-        // TODO Auto-generated method stub
+        try {
+            dbConnection = ConnectionManager.getConnection();
+            System.out.println("Connection established successfully: " + dbConnection.getCatalog());
+
+            int genreId = getBookGenreId(genre);
+            int authorId = getBookAuthorId(author);
+
+            String sql = "UPDATE books SET title = ?, publishDate = ?, genre_id = ?, author_id = ? WHERE isbn_13 = ?";
+            PreparedStatement ps = dbConnection.prepareStatement(sql);
+            ps.setString(1, title);
+            ps.setDate(2, publishDate);
+            ps.setInt(3, genreId);
+            ps.setInt(4, authorId);
+            ps.setString(5, isbn_13);
+
+            int rowsUpdated = ps.executeUpdate();
+            if (rowsUpdated == 0) {
+                throw new BookNotFoundException();
+            } else {
+                return true;
+            }
+        } catch (DBReturnNullConnectionException e) {
+            System.err.println("updateAuthorById threw a DBReturnNullConnectionException: " + e.getMessage());
+        } catch (SQLException e) {
+            System.err.println("updateAuthorById threw a SQLException: " + e.getMessage());
+        } catch (FileNotFoundException e) {
+            System.err.println("updateAuthorById threw a FileNotFoundException: " + e.getMessage());
+        } catch (IOException e) {
+            System.err.println("updateAuthorById threw a IOException: " + e.getMessage());
+        } catch (ClassNotFoundException e) {
+            System.err.println("updateAuthorById threw a ClassNotFoundException: " + e.getMessage());
+        } catch (BookNotFoundException e) {
+            System.err.println("deleteBookById threw a BookNotFoundException: " + e.getMessage());
+        } catch (GenreNotFoundException e) {
+            System.err.println("deleteBookById threw a GenreNotFoundException: " + e.getMessage());
+        } catch (AuthorNotFoundException e) {
+            System.err.println("deleteBookById threw a AuthorNotFoundException: " + e.getMessage());
+        }
         return false;
     }
 
