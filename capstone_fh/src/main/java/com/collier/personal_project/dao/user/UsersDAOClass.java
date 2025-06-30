@@ -143,15 +143,15 @@ public class UsersDAOClass implements UsersDAOInterface{
             }
             return users;
         } catch (ClassNotFoundException e) {
-            System.err.println("getAllAuthors threw a ClassNotFoundException: " + e.getMessage());
+            System.err.println("getAllUsers threw a ClassNotFoundException: " + e.getMessage());
         } catch (FileNotFoundException e) {
-            System.err.println("getAllAuthors threw a FileNotFoundException: " + e.getMessage());
+            System.err.println("getAllUsers threw a FileNotFoundException: " + e.getMessage());
         } catch (IOException e) {
-            System.err.println("getAllAuthors threw a IOException: " + e.getMessage());
+            System.err.println("getAllUsers threw a IOException: " + e.getMessage());
         } catch (SQLException e) {
-            System.err.println("getAllAuthors threw a SQLException: " + e.getMessage());
+            System.err.println("getAllUsers threw a SQLException: " + e.getMessage());
         } catch (DBReturnNullConnectionException e) {
-            System.err.println("getAllAuthors threw a DBReturnNullConnectionException: " + e.getMessage());
+            System.err.println("getAllUsers threw a DBReturnNullConnectionException: " + e.getMessage());
         }
 
         return null;
@@ -159,19 +159,114 @@ public class UsersDAOClass implements UsersDAOInterface{
 
     @Override
     public UserPOJO getUserById(int id) {
-        // TODO Auto-generated method stub
+        UserPOJO user;
+
+        try {
+            dbConnection = ConnectionManager.getConnection();
+            System.out.println("Connection established successfully: " + dbConnection.getCatalog());
+
+            String sql = "SELECT * FROM users WHERE user_id = ?";
+            PreparedStatement ps = dbConnection.prepareStatement(sql);
+            ps.setInt(1, id);
+
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next())
+                user = new UserPOJO(id, 
+                        rs.getString("username"), 
+                        rs.getString("password"), 
+                        rs.getTimestamp("created_at"), 
+                        rs.getTimestamp("updated_at"));
+            else
+                throw new UserNotFoundException();
+        } catch (ClassNotFoundException e) {
+            System.err.println("getUserById threw a ClassNotFoundException: " + e.getMessage());
+        } catch (FileNotFoundException e) {
+            System.err.println("getUserById threw a FileNotFoundException: " + e.getMessage());
+        } catch (IOException e) {
+            System.err.println("getUserById threw a IOException: " + e.getMessage());
+        } catch (SQLException e) {
+            System.err.println("getUserById threw a SQLException: " + e.getMessage());
+        } catch (DBReturnNullConnectionException e) {
+            System.err.println("getUserById threw a DBReturnNullConnectionException: " + e.getMessage());
+        } catch (UserNotFoundException e) {
+            System.err.println("getUserById threw a UserNotFoundException: " + e.getMessage()); 
+        }
+
         return null;
     }
 
     @Override
     public UserPOJO getUserByUsername(String username) {
-        // TODO Auto-generated method stub
+        UserPOJO user;
+
+        try {
+            dbConnection = ConnectionManager.getConnection();
+            System.out.println("Connection established successfully: " + dbConnection.getCatalog());
+
+            String sql = "SELECT * FROM users WHERE username = ?";
+            PreparedStatement ps = dbConnection.prepareStatement(sql);
+            ps.setString(1, username);
+
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next())
+                user = new UserPOJO(rs.getInt("user_id"), 
+                        username, 
+                        rs.getString("password"), 
+                        rs.getTimestamp("created_at"), 
+                        rs.getTimestamp("updated_at"));
+            else
+                throw new UserNotFoundException();
+        } catch (ClassNotFoundException e) {
+            System.err.println("getUserByUsername threw a ClassNotFoundException: " + e.getMessage());
+        } catch (FileNotFoundException e) {
+            System.err.println("getUserByUsername threw a FileNotFoundException: " + e.getMessage());
+        } catch (IOException e) {
+            System.err.println("getUserByUsername threw a IOException: " + e.getMessage());
+        } catch (SQLException e) {
+            System.err.println("getUserByUsername threw a SQLException: " + e.getMessage());
+        } catch (DBReturnNullConnectionException e) {
+            System.err.println("getUserByUsername threw a DBReturnNullConnectionException: " + e.getMessage());
+        } catch (UserNotFoundException e) {
+            System.err.println("getUserByUsername threw a UserNotFoundException: " + e.getMessage()); 
+        }
+
         return null;
     }
 
     @Override
-    public boolean updateUserById(int id, String username, String pasword) {
-        // TODO Auto-generated method stub
+    public boolean updateUserById(int id, String username, String password) {
+        try {
+            dbConnection = ConnectionManager.getConnection();
+            System.out.println("Connection established successfully: " + dbConnection.getCatalog());
+
+            String sql = "UPDATE authors SET username = ?, password = ? WHERE author_id = ?";
+            PreparedStatement ps = dbConnection.prepareStatement(sql);
+            ps.setString(1, username);
+            ps.setString(2, password);
+            ps.setInt(3, id);
+
+            int rowsUpdated = ps.executeUpdate();
+            if (rowsUpdated == 0) {
+                throw new UserNotFoundException();
+            } else {
+                return true;
+            }
+        } catch (ClassNotFoundException e) {
+            System.err.println("getUserByUsername threw a ClassNotFoundException: " + e.getMessage());
+        } catch (FileNotFoundException e) {
+            System.err.println("getUserByUsername threw a FileNotFoundException: " + e.getMessage());
+        } catch (IOException e) {
+            System.err.println("getUserByUsername threw a IOException: " + e.getMessage());
+        } catch (SQLException e) {
+            System.err.println("getUserByUsername threw a SQLException: " + e.getMessage());
+        } catch (DBReturnNullConnectionException e) {
+            System.err.println("getUserByUsername threw a DBReturnNullConnectionException: " + e.getMessage());
+        } catch (UserNotFoundException e) {
+            System.err.println("getUserByUsername threw a UserNotFoundException: " + e.getMessage()); 
+        }
+
         return false;
     }
 
