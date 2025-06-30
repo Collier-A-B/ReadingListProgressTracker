@@ -201,7 +201,7 @@ public class AuthorsDAOClass implements AuthorsDAOInterface {
             dbConnection = ConnectionManager.getConnection();
             System.out.println("Connection established successfully: " + dbConnection.getCatalog());
 
-            String sql = "SELECT * FROM authors WHERE author_id = ?";
+            String sql = "SELECT * FROM authors WHERE name = ?";
             PreparedStatement ps = dbConnection.prepareStatement(sql);
             ps.setString(1, name);
 
