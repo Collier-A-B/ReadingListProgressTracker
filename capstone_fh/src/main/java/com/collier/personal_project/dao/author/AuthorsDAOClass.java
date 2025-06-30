@@ -22,7 +22,7 @@ public class AuthorsDAOClass implements AuthorsDAOInterface {
     private Connection dbConnection;
 
     @Override
-    public boolean addAuthor(String name) throws AuthorNotCreatedException {
+    public boolean addAuthor(String name) {
         try {
             dbConnection = ConnectionManager.getConnection();
             System.out.println("Connection established successfully: " + dbConnection.getCatalog());
@@ -38,21 +38,23 @@ public class AuthorsDAOClass implements AuthorsDAOInterface {
                 return true;
             }
         } catch (DBReturnNullConnectionException e) {
-            System.err.println("updateAuthorById threw a DBReturnNullConnectionException: " + e.getMessage());
+            System.err.println("addAuthor threw a DBReturnNullConnectionException: " + e.getMessage());
         } catch (SQLException e) {
-            System.err.println("updateAuthorById threw a SQLException: " + e.getMessage());
+            System.err.println("addAuthor threw a SQLException: " + e.getMessage());
         } catch (FileNotFoundException e) {
-            System.err.println("updateAuthorById threw a FileNotFoundException: " + e.getMessage());
+            System.err.println("addAuthor threw a FileNotFoundException: " + e.getMessage());
         } catch (IOException e) {
-            System.err.println("updateAuthorById threw a IOException: " + e.getMessage());
+            System.err.println("addAuthor threw a IOException: " + e.getMessage());
         } catch (ClassNotFoundException e) {
-            System.err.println("updateAuthorById threw a ClassNotFoundException: " + e.getMessage());
+            System.err.println("addAuthor threw a ClassNotFoundException: " + e.getMessage());
+        } catch (AuthorNotCreatedException e) {
+            System.err.println("addAuthor threw a AuthorNotCreatedException" + e.getMessage());
         }
         return false;
     }
 
     @Override
-    public boolean deleteAuthorById(int id) throws AuthorNotFoundException{
+    public boolean deleteAuthorById(int id){
         try {
             dbConnection = ConnectionManager.getConnection();
             System.out.println("Connection established successfully: " + dbConnection.getCatalog());
@@ -77,12 +79,14 @@ public class AuthorsDAOClass implements AuthorsDAOInterface {
             System.err.println("deleteAuthorById threw a IOException: " + e.getMessage());
         } catch (ClassNotFoundException e) {
             System.err.println("deleteAuthorById threw a ClassNotFoundException: " + e.getMessage());
+        } catch (AuthorNotFoundException e) {
+            System.err.println("deleteAuthorById threw a AuthorNotFoundException: " + e.getMessage());
         }
         return false;
     }
 
     @Override
-    public boolean deleteAuthorByName(String name) throws AuthorNotFoundException{
+    public boolean deleteAuthorByName(String name){
         try {
             dbConnection = ConnectionManager.getConnection();
             System.out.println("Connection established successfully: " + dbConnection.getCatalog());
@@ -107,6 +111,8 @@ public class AuthorsDAOClass implements AuthorsDAOInterface {
             System.err.println("deleteAuthorById threw a IOException: " + e.getMessage());
         } catch (ClassNotFoundException e) {
             System.err.println("deleteAuthorById threw a ClassNotFoundException: " + e.getMessage());
+        } catch (AuthorNotFoundException e) {
+            System.err.println("deleteAuthorById threw a AuthorNotFoundException: " + e.getMessage());
         }
         return false;
     }
@@ -149,7 +155,7 @@ public class AuthorsDAOClass implements AuthorsDAOInterface {
     }
 
     @Override
-    public AuthorPOJO getAuthorById(int id) throws AuthorNotFoundException {
+    public AuthorPOJO getAuthorById(int id) {
         AuthorPOJO author;
 
         try {
@@ -180,13 +186,15 @@ public class AuthorsDAOClass implements AuthorsDAOInterface {
             System.err.println("getAuthorById threw a IOException: " + e.getMessage());
         } catch (ClassNotFoundException e) {
             System.err.println("getAuthorById threw a ClassNotFoundException: " + e.getMessage());
+        } catch (AuthorNotFoundException e) {
+            System.err.println("getAuthorById threw a AuthorNotFoundException: " + e.getMessage());
         }
 
         return null;
     }
 
     @Override
-    public AuthorPOJO getAuthorByName(String name) throws AuthorNotFoundException {
+    public AuthorPOJO getAuthorByName(String name) {
         AuthorPOJO author;
 
         try {
@@ -217,13 +225,15 @@ public class AuthorsDAOClass implements AuthorsDAOInterface {
             System.err.println("getAuthorById threw a IOException: " + e.getMessage());
         } catch (ClassNotFoundException e) {
             System.err.println("getAuthorById threw a ClassNotFoundException: " + e.getMessage());
+        } catch (AuthorNotFoundException e) {
+            System.err.println("getAuthorById threw a AuthorNotFoundException: " + e.getMessage());
         }
 
         return null;
     }
 
     @Override
-    public boolean updateAuthorById(int id, String name) throws AuthorNotFoundException {
+    public boolean updateAuthorById(int id, String name) {
         try {
             dbConnection = ConnectionManager.getConnection();
             System.out.println("Connection established successfully: " + dbConnection.getCatalog());
@@ -249,6 +259,8 @@ public class AuthorsDAOClass implements AuthorsDAOInterface {
             System.err.println("updateAuthorById threw a IOException: " + e.getMessage());
         } catch (ClassNotFoundException e) {
             System.err.println("updateAuthorById threw a ClassNotFoundException: " + e.getMessage());
+        } catch (AuthorNotFoundException e) {
+            System.err.println("updateAuthorById threw a AuthorNotFoundException: " + e.getMessage());
         }
         return false;
     }

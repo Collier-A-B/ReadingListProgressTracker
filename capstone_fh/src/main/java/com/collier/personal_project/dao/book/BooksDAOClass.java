@@ -43,7 +43,7 @@ public class BooksDAOClass implements BooksDAOInterface{
     // interface method implementations
 
     @Override
-    public boolean addBook(String title, Date publishDate, String isbn_13, String genre, String author) throws BookNotCreatedException{
+    public boolean addBook(String title, Date publishDate, String isbn_13, String genre, String author){
         try {
             dbConnection = ConnectionManager.getConnection();
             System.out.println("Connection established successfully: " + dbConnection.getCatalog());
@@ -83,7 +83,7 @@ public class BooksDAOClass implements BooksDAOInterface{
     }
 
     @Override
-    public boolean deleteBookById(int id) throws BookNotFoundException{
+    public boolean deleteBookById(int id) {
         try {
             dbConnection = ConnectionManager.getConnection();
             System.out.println("Connection established successfully: " + dbConnection.getCatalog());
@@ -114,7 +114,31 @@ public class BooksDAOClass implements BooksDAOInterface{
 
     @Override
     public boolean deleteBookByIsbn13(String isbn_13) {
-        // TODO Auto-generated method stub
+        try {
+            dbConnection = ConnectionManager.getConnection();
+            System.out.println("Connection established successfully: " + dbConnection.getCatalog());
+
+            String sql = "DELETE FROM books WHERE isbn_13 = ?";
+            PreparedStatement ps = dbConnection.prepareStatement(sql);
+            ps.setString(1, isbn_13);
+
+            int rowsUpdated = ps.executeUpdate();
+            if (rowsUpdated == 0) {
+                throw new BookNotFoundException();
+            } else {
+                return true;
+            }
+        } catch (DBReturnNullConnectionException e) {
+            System.err.println("deleteBookById threw a DBReturnNullConnectionException: " + e.getMessage());
+        } catch (SQLException e) {
+            System.err.println("deleteBookById threw a SQLException: " + e.getMessage());
+        } catch (FileNotFoundException e) {
+            System.err.println("deleteBookById threw a FileNotFoundException: " + e.getMessage());
+        } catch (IOException e) {
+            System.err.println("deleteBookById threw a IOException: " + e.getMessage());
+        } catch (ClassNotFoundException e) {
+            System.err.println("deleteBookById threw a ClassNotFoundException: " + e.getMessage());
+        }
         return false;
     }
 
@@ -160,7 +184,7 @@ public class BooksDAOClass implements BooksDAOInterface{
     }
 
     @Override
-    public BookPOJO getBookByISBN(String isbn_13) throws BookNotFoundException{
+    public BookPOJO getBookByISBN(String isbn_13) {
         BookPOJO book;
 
         try {
@@ -286,7 +310,38 @@ public class BooksDAOClass implements BooksDAOInterface{
 
     @Override
     public boolean updateBookById(int id, String title, Date publishDate, String isbn_13, String genre, String author) {
-        // TODO Auto-generated method stub
+        try {
+            dbConnection = ConnectionManager.getConnection();
+            System.out.println("Connection established successfully: " + dbConnection.getCatalog());
+
+            int genreId = getBookGenreId(genre);
+            int authorId = getBookAuthorId(author);
+
+            String sql = "UPDATE books SET title = ?, publishDate = ?, isbn_13 = ?, genre_id = ?, author_id = ? WHERE author_id = ?";
+            PreparedStatement ps = dbConnection.prepareStatement(sql);
+            ps.setString(1, title);
+            ps.setDate(2, publishDate);
+            ps.setString(3, isbn_13);
+            ps.setInt(4, genreId);
+            ps.setInt(5, authorId);
+
+            int rowsUpdated = ps.executeUpdate();
+            if (rowsUpdated == 0) {
+                throw new AuthorNotFoundException();
+            } else {
+                return true;
+            }
+        } catch (DBReturnNullConnectionException e) {
+            System.err.println("updateAuthorById threw a DBReturnNullConnectionException: " + e.getMessage());
+        } catch (SQLException e) {
+            System.err.println("updateAuthorById threw a SQLException: " + e.getMessage());
+        } catch (FileNotFoundException e) {
+            System.err.println("updateAuthorById threw a FileNotFoundException: " + e.getMessage());
+        } catch (IOException e) {
+            System.err.println("updateAuthorById threw a IOException: " + e.getMessage());
+        } catch (ClassNotFoundException e) {
+            System.err.println("updateAuthorById threw a ClassNotFoundException: " + e.getMessage());
+        }
         return false;
     }
 
