@@ -52,7 +52,7 @@ public class AuthorsDAOClass implements AuthorsDAOInterface {
     }
 
     @Override
-    public boolean deleteAuthorById(int id) {
+    public boolean deleteAuthorById(int id) throws AuthorNotFoundException{
         try {
             dbConnection = ConnectionManager.getConnection();
             System.out.println("Connection established successfully: " + dbConnection.getCatalog());
