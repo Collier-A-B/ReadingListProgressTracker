@@ -57,7 +57,8 @@ public class App {
                         \tLogin Page\n\n
                         \tPlease select from one of the following options:\n
                         \t1) Login
-                        \t2) Exit Program
+                        \t2) Login as administrator
+                        \t3) Exit Program
                         """).toCharArray());
                 System.out.print("\tYour Input: ");
                 int bufferInput = scan.nextInt();
@@ -69,7 +70,7 @@ public class App {
                 System.err.println("Your selection must be an integer value listed above");
             }
         }
-        if (userInput == 2)
+        if (userInput == 3)
             return true;
         else {
             String username = null;
@@ -98,7 +99,7 @@ public class App {
                     password = null;
                 }
             }
-            // TODO: Implement actual login logic with db
+            // TODO: Implement actual login logic with db (user and admin)
             System.out.println("username: " + username);
             System.out.println("password: " + password);
             USER_LOGGED_IN = true;
@@ -108,7 +109,34 @@ public class App {
     }
 
     private static void displayReadinglistOptions(Scanner scan) {
+        int userInput = -1;
+        while (userInput == -1) {
+            try {
+                System.out.println(String.format("""
+                        ******************************************************
+                        \tReading List Options\n\n
+                        \tPlease select from one of the following options:\n
+                        \t1) Display all books in your reading list
+                        \t2) Display books not in your reading list
+                        \t3) Display all books available in this application
 
+                        \t*) Display all books in list by author
+                        \t*) Display all books not in list by author
+
+                        \t*) Display all books in list by genre
+
+                        \t*) Logout
+                        """).toCharArray());
+                System.out.print("\tYour Input: ");
+                int bufferInput = scan.nextInt();
+                if (bufferInput != 1 && bufferInput != 2)
+                    throw new InputMismatchException();
+                userInput = bufferInput;
+
+            } catch (InputMismatchException e) {
+                System.err.println("Your selection must be an integer value listed above");
+            }
+        }
     }
 
     /**
