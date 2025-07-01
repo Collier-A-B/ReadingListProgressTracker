@@ -1,4 +1,4 @@
-package com.collier.personal_project.custom_exceptions;
+package com.collier.personal_project.custom_exceptions.database_exceptions;
 
 public class GenreNotFoundException extends Exception{
 

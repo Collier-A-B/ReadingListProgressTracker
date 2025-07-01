@@ -1,38 +1,72 @@
 package com.collier.personal_project;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.sql.Connection;
-import java.sql.SQLException;
-
-import com.collier.personal_project.connection.ConnectionManager;
-import com.collier.personal_project.custom_exceptions.DBReturnNullConnectionException;
+import com.collier.personal_project.custom_exceptions.ui_exceptions.LoginFailedException;
+import com.collier.personal_project.custom_exceptions.ui_exceptions.LogoutFailedException;
 
 /**
  * Hello world!
  */
 public class App {
+
+    private static boolean USER_LOGGED_IN = false;
+
     public static void main(String[] args) {
-        // Test DB Connection
+
+        System.out.println(String.format("""
+                ******************************************************
+                \tWelcome to the reading list tracker!!!\n
+                \tMade by Adam Collier
+                ******************************************************
+                """).toCharArray());
+
+        boolean exitProgram = false;
+
+        while (!exitProgram) {
+            if (!USER_LOGGED_IN) {
+
+            }
+        }
+    }
+
+    /**
+     * helper function that allows user to log in
+     * 
+     * @return
+     */
+    private static boolean userLogIn(String username, String password) {
         try {
-            Connection dbConnection = ConnectionManager.getConnection();
-            System.out.println("Connection established successfully: " + dbConnection.getCatalog());
-            
-        } catch (SQLException e) {
-            System.err.println("SQL Exception: " + e.getMessage());
-        } 
-        catch (FileNotFoundException e) {
-            System.err.println("Configuration file not found: " + e.getMessage());
-        } 
-        catch (ClassNotFoundException e) {
-            System.err.println("JDBC Driver class not found: " + e.getMessage());
-        } 
-        catch (IOException e) {
-            System.err.println("I/O Exception: " + e.getMessage());
-        } catch (DBReturnNullConnectionException e) {
-            System.err.println("Database connection returned null: " + e.getMessage());
+            // if a user is logged in
+            if (USER_LOGGED_IN) {
+                throw new LoginFailedException();
+            } 
+
+            // TODO: LOGIN LOGIC
+
+            return true;
+        } catch (LoginFailedException e){
+            System.err.println("user login attempt failed: " + e.getMessage());
         }
-        catch (Exception e) {
+        return false;
+    }
+
+    /**
+     * helper function that allows user to log out
+     * 
+     * @return
+     */
+    private static boolean userLogOut() {
+        try {
+            // if a user is logged in
+            if (!USER_LOGGED_IN) {
+                throw new LogoutFailedException();
+            } 
+
+            // TODO: LOGOUT LOGIC
+
+            return true;
+        } catch (LogoutFailedException e){
+            System.err.println("user login attempt failed: " + e.getMessage());
         }
+        return false;
     }
 }

@@ -11,9 +11,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.collier.personal_project.connection.ConnectionManager;
-import com.collier.personal_project.custom_exceptions.AuthorNotCreatedException;
-import com.collier.personal_project.custom_exceptions.AuthorNotFoundException;
-import com.collier.personal_project.custom_exceptions.DBReturnNullConnectionException;
+import com.collier.personal_project.custom_exceptions.database_exceptions.AuthorNotCreatedException;
+import com.collier.personal_project.custom_exceptions.database_exceptions.AuthorNotFoundException;
+import com.collier.personal_project.custom_exceptions.database_exceptions.DBReturnNullConnectionException;
 import com.collier.personal_project.dao_model.AuthorPOJO;
 
 public class AuthorsDAOClass implements AuthorsDAOInterface {

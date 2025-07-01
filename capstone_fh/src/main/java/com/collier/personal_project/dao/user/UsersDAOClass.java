@@ -11,9 +11,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.collier.personal_project.connection.ConnectionManager;
-import com.collier.personal_project.custom_exceptions.DBReturnNullConnectionException;
-import com.collier.personal_project.custom_exceptions.UserNotCreatedException;
-import com.collier.personal_project.custom_exceptions.UserNotFoundException;
+import com.collier.personal_project.custom_exceptions.database_exceptions.DBReturnNullConnectionException;
+import com.collier.personal_project.custom_exceptions.database_exceptions.UserNotCreatedException;
+import com.collier.personal_project.custom_exceptions.database_exceptions.UserNotFoundException;
 import com.collier.personal_project.dao_model.UserPOJO;
 
 public class UsersDAOClass implements UsersDAOInterface{

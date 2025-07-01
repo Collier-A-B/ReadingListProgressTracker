@@ -12,11 +12,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.collier.personal_project.connection.ConnectionManager;
-import com.collier.personal_project.custom_exceptions.AuthorNotFoundException;
-import com.collier.personal_project.custom_exceptions.BookNotCreatedException;
-import com.collier.personal_project.custom_exceptions.BookNotFoundException;
-import com.collier.personal_project.custom_exceptions.DBReturnNullConnectionException;
-import com.collier.personal_project.custom_exceptions.GenreNotFoundException;
+import com.collier.personal_project.custom_exceptions.database_exceptions.AuthorNotFoundException;
+import com.collier.personal_project.custom_exceptions.database_exceptions.BookNotCreatedException;
+import com.collier.personal_project.custom_exceptions.database_exceptions.BookNotFoundException;
+import com.collier.personal_project.custom_exceptions.database_exceptions.DBReturnNullConnectionException;
+import com.collier.personal_project.custom_exceptions.database_exceptions.GenreNotFoundException;
 import com.collier.personal_project.dao.author.AuthorsDAOClass;
 import com.collier.personal_project.dao.genre.GenreDAOClass;
 import com.collier.personal_project.dao_model.AuthorPOJO;

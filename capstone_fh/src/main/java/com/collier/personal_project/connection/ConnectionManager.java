@@ -8,7 +8,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Properties;
 
-import com.collier.personal_project.custom_exceptions.DBReturnNullConnectionException;
+import com.collier.personal_project.custom_exceptions.database_exceptions.DBReturnNullConnectionException;
 
 /**
  * ConnectionManager is responsible for managing database connections.
