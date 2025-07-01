@@ -116,14 +116,20 @@ public class App {
                         ******************************************************
                         \tReading List Options\n\n
                         \tPlease select from one of the following options:\n
-                        \t1) Display all books in your reading list
-                        \t2) Display books not in your reading list
-                        \t3) Display all books available in this application
+                        \t*) Display books in your reading list
+                        \t*) Display books not in your reading list
+                        \t*) Display all books available in this app
 
-                        \t*) Display all books in list by author
-                        \t*) Display all books not in list by author
+                        \t*) Display  books in list by author
+                        \t*) Display  books not in list by author
+                        \t*) Display all books in app by author
 
-                        \t*) Display all books in list by genre
+                        \t*) Display books in list by genre
+                        \t*) Display books not in list by genre
+                        \t*) Display all books in app by genre
+
+                        \t*) Add book to your list
+                        \t*) Remove book from your list
 
                         \t*) Logout
                         """).toCharArray());
@@ -137,6 +143,10 @@ public class App {
                 System.err.println("Your selection must be an integer value listed above");
             }
         }
+    }
+
+    private static void displayAdminOptions() {
+        
     }
 
     /**
