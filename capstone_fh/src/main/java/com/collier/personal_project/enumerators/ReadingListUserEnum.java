@@ -1,0 +1,7 @@
+package com.collier.personal_project.enumerators;
+
+public enum ReadingListUserEnum {
+    DISPLAY_BOOKS_IN_LIST, DISPLAY_BOOKS_NOT_IN_LIST, DISPLAY_ALL_BOOKS_IN_APP,
+    ADD_BOOK_TO_LIST, REMOVE_BOOK_FROM_LIST, UPDATE_STATUS_OF_BOOK_IN_LIST, 
+    LOGOUT,NO_OPTION_SELECTED
+}

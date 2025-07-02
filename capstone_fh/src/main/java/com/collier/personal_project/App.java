@@ -6,6 +6,10 @@ import java.util.Scanner;
 
 import com.collier.personal_project.custom_exceptions.ui_exceptions.LoginFailedException;
 import com.collier.personal_project.custom_exceptions.ui_exceptions.LogoutFailedException;
+import com.collier.personal_project.dao.user.UsersDAOClass;
+import com.collier.personal_project.dao_model.UserPOJO;
+import com.collier.personal_project.enumerators.LoginEnum;
+import com.collier.personal_project.enumerators.ReadingListUserEnum;
 
 /**
  * Hello world!
@@ -13,6 +17,7 @@ import com.collier.personal_project.custom_exceptions.ui_exceptions.LogoutFailed
 public class App {
 
     private static boolean USER_LOGGED_IN = false;
+    private static UserPOJO USER;
 
     public static void main(String[] args) {
 
@@ -23,130 +28,186 @@ public class App {
                 ******************************************************
                 """).toCharArray());
 
-        
-        try (Scanner scan = new Scanner(System.in)){
-            
+        final UsersDAOClass usersDAO = new UsersDAOClass();
+
+        try (Scanner scan = new Scanner(System.in)) {
+
             boolean exitProgram = false;
-            
+
             while (!exitProgram) {
                 if (!USER_LOGGED_IN) {
-                    exitProgram = displayLoginOptions(scan);
+                    exitProgram = displayLoginOptions(scan, usersDAO);
                 }
 
                 if (USER_LOGGED_IN) {
                     // TODO: menu logic for when a user has successfully logged in
-                    displayReadinglistOptions(scan);
+                    displayReadinglistOptions(scan, usersDAO);
                 }
             }
         }
-        
+
     }
 
     /**
-     * Console UI function that handle user login/logout
+     * Console UI function that handle user login and program termination
      * 
-     * @return
+     * @param scan
+     * @param userDAO
+     * @return true only if user chooses to terminate the program
      */
-    private static boolean displayLoginOptions(Scanner scan) {
+    private static boolean displayLoginOptions(Scanner scan, UsersDAOClass userDAO) {
 
-        int userInput = -1;
-        while (userInput == -1) {
+        LoginEnum userInput = LoginEnum.NO_SELECTION_MADE;
+        while (userInput == LoginEnum.NO_SELECTION_MADE) {
             try {
+                // each option coresponds to a value in LoginEnum
+                // offset by +1
                 System.out.println(String.format("""
                         ******************************************************
                         \tLogin Page\n\n
                         \tPlease select from one of the following options:\n
-                        \t1) Login
+                        \t1) Login as user
                         \t2) Login as administrator
                         \t3) Exit Program
                         """).toCharArray());
                 System.out.print("\tYour Input: ");
-                int bufferInput = scan.nextInt();
-                if (bufferInput != 1 && bufferInput != 2)
+                int bufferInput = scan.nextInt() - 1;
+                if (bufferInput < 0 || bufferInput > 2)
                     throw new InputMismatchException();
-                userInput = bufferInput;
+                userInput = LoginEnum.values()[bufferInput];
 
             } catch (InputMismatchException e) {
                 System.err.println("Your selection must be an integer value listed above");
             }
         }
-        if (userInput == 3)
-            return true;
-        else {
-            String username = null;
-            String password = null;
+        switch (userInput) {
+            case EXIT_PROGRAM:
+                return true;
+            case LOGIN_USER:
+            case LOGIN_ADMIN:
+                String username = null;
+                String password = null;
 
-            while (username == null || password == null) {
-                try {
-                    System.out.println(String.format("""
-                            \n\n\tPlease enter your username and password.
-                            \tYour input must be a valid string with a lenth
-                            \tgreater than zero.
-                            """).toCharArray());
+                while (username == null || password == null) {
+                    try {
+                        System.out.println(String.format("""
+                                \n\n\tPlease enter your username and password.
+                                \tYour input must be a valid string with a lenth
+                                \tgreater than zero.
+                                """).toCharArray());
 
-                    System.out.print("\tUsername: ");
-                    username = scan.next();
+                        System.out.print("\tUsername: ");
+                        username = scan.next();
 
-                    System.out.print("\tPassword: ");
-                    password = scan.next();
+                        System.out.print("\tPassword: ");
+                        password = scan.next();
 
-                    if (username.length() == 0 || password.length() == 0)
-                        throw new IOException("Username and password cannot be empty");
+                        if (username.length() == 0 || password.length() == 0)
+                            throw new IOException("Username and password cannot be empty");
 
-                } catch (IOException e) {
-                    System.err.println("invalid input detected: " + e.getMessage());
-                    username = null;
-                    password = null;
+                    } catch (IOException e) {
+                        System.err.println("invalid input detected: " + e.getMessage());
+                        username = null;
+                        password = null;
+                    }
                 }
-            }
-            // TODO: Implement actual login logic with db (user and admin)
-            System.out.println("username: " + username);
-            System.out.println("password: " + password);
-            USER_LOGGED_IN = true;
-
-            return false;
+                // TODO: Implement actual login logic with db (user and admin)
+                System.out.println("username: " + username);
+                System.out.println("password: " + password);
+                if (userInput == LoginEnum.LOGIN_ADMIN)
+                    USER_LOGGED_IN = adminLogin(userDAO, username, password);
+                else
+                    USER_LOGGED_IN = userLogIn(userDAO, username, password);
+                break;
+            default:
+                System.err.println("Invalid input detected");
         }
+        return false;
     }
 
-    private static void displayReadinglistOptions(Scanner scan) {
-        int userInput = -1;
-        while (userInput == -1) {
+    /**
+     * Display method that handles user reading list interaction options
+     * 
+     * @param scan
+     * @param userDAO
+     */
+    private static void displayReadinglistOptions(Scanner scan, UsersDAOClass userDAO) {
+        ReadingListUserEnum userInput = ReadingListUserEnum.NO_OPTION_SELECTED;
+        while (userInput == ReadingListUserEnum.NO_OPTION_SELECTED) {
             try {
+                // each option coresponds to ReadingListUserEnum values, offset by +1
                 System.out.println(String.format("""
                         ******************************************************
                         \tReading List Options\n\n
                         \tPlease select from one of the following options:\n
-                        \t*) Display books in your reading list
-                        \t*) Display books not in your reading list
-                        \t*) Display all books available in this app
+                        \t1) Display books in your reading list
+                        \t2) Display books not in your reading list
+                        \t3) Display all books available in this app
 
-                        \t*) Display  books in list by author
-                        \t*) Display  books not in list by author
-                        \t*) Display all books in app by author
+                        \t4) Add book to your list
+                        \t5) Remove book from your list
+                        \t6) Update status of book in list
 
-                        \t*) Display books in list by genre
-                        \t*) Display books not in list by genre
-                        \t*) Display all books in app by genre
-
-                        \t*) Add book to your list
-                        \t*) Remove book from your list
-
-                        \t*) Logout
+                        \t7) Logout
                         """).toCharArray());
                 System.out.print("\tYour Input: ");
-                int bufferInput = scan.nextInt();
-                if (bufferInput != 1 && bufferInput != 2)
+                int bufferInput = scan.nextInt() - 1;
+                if (bufferInput < 0 || bufferInput > 6)
                     throw new InputMismatchException();
-                userInput = bufferInput;
+                userInput = ReadingListUserEnum.values()[bufferInput];
 
             } catch (InputMismatchException e) {
                 System.err.println("Your selection must be an integer value listed above");
             }
+
+            // TODO: Implement option handling logic
+            switch (userInput) {
+                case DISPLAY_BOOKS_IN_LIST:
+
+                    break;
+                case DISPLAY_BOOKS_NOT_IN_LIST:
+                    break;
+                case DISPLAY_ALL_BOOKS_IN_APP:
+                    break;
+                case ADD_BOOK_TO_LIST:
+                    break;
+                case REMOVE_BOOK_FROM_LIST:
+                    break;
+                case UPDATE_STATUS_OF_BOOK_IN_LIST:
+                    break;
+                case LOGOUT:
+                    break;
+                default:
+                    System.err.println("Invalid selection");
+                    break;
+            }
         }
     }
 
-    private static void displayAdminOptions() {
-        
+    /**
+     * 
+     * @param scan
+     * @param userDAO
+     */
+    private static void displayBookFilterOptions(Scanner scan, UsersDAOClass userDAO) {
+        /*
+         * MOVE THIS BLOCK
+         * \t*) Display books in list by author
+         * \t*) Display books not in list by author
+         * \t*) Display all books in app by author
+         * 
+         * MOVE THIS BLOCK
+         * \t*) Display books in list by genre
+         * \t*) Display books not in list by genre
+         * \t*) Display all books in app by genre
+         */
+    }
+
+    /**
+     * display function that handles administrator options
+     */
+    private static void displayAdminOptions(Scanner scan, UsersDAOClass userDAO) {
+
     }
 
     /**
@@ -154,7 +215,7 @@ public class App {
      * 
      * @return true if login was successful, else false
      */
-    private static boolean userLogIn(String username, String password) {
+    private static boolean userLogIn(UsersDAOClass userDAO, String username, String password) {
         try {
             // if a user is logged in
             if (USER_LOGGED_IN) {
@@ -162,11 +223,20 @@ public class App {
             }
 
             // TODO: LOGIN LOGIC
-
+            UserPOJO dbReturn = userDAO.getUserByUsername(username);
+            if (dbReturn == null || !dbReturn.getPassword().equals(password))
+                throw new LoginFailedException();
+            USER = dbReturn;
             return true;
         } catch (LoginFailedException e) {
             System.err.println("user login attempt failed: " + e.getMessage());
         }
+        return false;
+    }
+
+    /*TODO */
+    private static boolean adminLogin(UsersDAOClass userDAO, String username, String password){
+
         return false;
     }
 
@@ -175,6 +245,7 @@ public class App {
      * 
      * @return
      */
+    /*TODO */
     private static boolean userLogOut() {
         try {
             // if a user is logged in
