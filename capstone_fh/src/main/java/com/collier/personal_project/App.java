@@ -215,7 +215,7 @@ public class App {
      * 
      * @return true if login was successful, else false
      */
-    private static boolean userLogIn(UsersDAOClass userDAO, String username, String password) {
+    private static boolean userLogIn(UsersDAOClass userDAO, String username, String password, boolean adminCheck) {
         try {
             // if a user is logged in
             if (USER_LOGGED_IN) {
@@ -226,17 +226,16 @@ public class App {
             UserPOJO dbReturn = userDAO.getUserByUsername(username);
             if (dbReturn == null || !dbReturn.getPassword().equals(password))
                 throw new LoginFailedException();
+            if (dbReturn.isAdmin() == false && adminCheck)
+                throw new LoginFailedException();
+            if (!adminCheck)
+                // user is not logging in as admin, block access to that functionality
+                dbReturn.revokeAdmin(); 
             USER = dbReturn;
             return true;
         } catch (LoginFailedException e) {
             System.err.println("user login attempt failed: " + e.getMessage());
         }
-        return false;
-    }
-
-    /*TODO */
-    private static boolean adminLogin(UsersDAOClass userDAO, String username, String password){
-
         return false;
     }
 
@@ -248,7 +247,7 @@ public class App {
     /*TODO */
     private static boolean userLogOut() {
         try {
-            // if a user is logged in
+            // if no user has logged in
             if (!USER_LOGGED_IN) {
                 throw new LogoutFailedException();
             }
