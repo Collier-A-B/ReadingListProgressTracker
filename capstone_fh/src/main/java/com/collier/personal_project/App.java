@@ -8,6 +8,8 @@ import com.collier.personal_project.custom_exceptions.ui_exceptions.LoginFailedE
 import com.collier.personal_project.custom_exceptions.ui_exceptions.LogoutFailedException;
 import com.collier.personal_project.dao.user.UsersDAOClass;
 import com.collier.personal_project.dao_model.UserPOJO;
+import com.collier.personal_project.enumerators.BookAlphanumericSortEnum;
+import com.collier.personal_project.enumerators.BookSortEnum;
 import com.collier.personal_project.enumerators.LoginEnum;
 import com.collier.personal_project.enumerators.ReadingListUserEnum;
 
@@ -163,11 +165,9 @@ public class App {
             // TODO: Implement option handling logic
             switch (userInput) {
                 case DISPLAY_BOOKS_IN_LIST:
-
-                    break;
                 case DISPLAY_BOOKS_NOT_IN_LIST:
-                    break;
                 case DISPLAY_ALL_BOOKS_IN_APP:
+                    displayBooks(scan, userDAO, userInput);
                     break;
                 case ADD_BOOK_TO_LIST:
                     break;
@@ -189,7 +189,7 @@ public class App {
      * @param scan
      * @param userDAO
      */
-    private static void displayBookFilterOptions(Scanner scan, UsersDAOClass userDAO) {
+    private static void displayBooks(Scanner scan, UsersDAOClass userDAO, ReadingListUserEnum displayChoice) {
         /*
          * MOVE THIS BLOCK
          * \t*) Display books in list by author
@@ -201,6 +201,57 @@ public class App {
          * \t*) Display books not in list by genre
          * \t*) Display all books in app by genre
          */
+
+        BookSortEnum bookSort = BookSortEnum.NO_OPTION_SELECTED;
+        BookAlphanumericSortEnum alphaNumSort = BookAlphanumericSortEnum.NO_OPTION_SELECTED;
+
+        while (bookSort == BookSortEnum.NO_OPTION_SELECTED) {
+            try {
+                // each option coresponds to ReadingListUserEnum values, offset by +1
+                System.out.println(String.format("""
+                        \tBook filtering options\n\n
+                        \tPlease select from one of the following options:\n
+                        \t1) Sort by author 
+                        \t2) Sort by genre
+                        \t3) None
+                        """).toCharArray());
+                System.out.print("\tYour Input: ");
+                int bufferInput = scan.nextInt() - 1;
+                if (bufferInput < 0 || bufferInput > 2)
+                    throw new InputMismatchException();
+                bookSort = BookSortEnum.values()[bufferInput];
+            } catch (InputMismatchException e) {
+                System.err.println("Invalid input");
+            }
+        }
+        while (alphaNumSort == BookAlphanumericSortEnum.NO_OPTION_SELECTED){
+            try {
+                System.out.println(String.format("""
+                        \tEnable alphanumeric sorting\n\n
+                        \tPlease select from one of the following options:\n
+                        \t1) Yes
+                        \t2) No
+                        """).toCharArray());
+                        System.out.print("\tYour Input: ");
+                int bufferInput = scan.nextInt() - 1;
+                if (bufferInput < 0 || bufferInput > 2)
+                    throw new InputMismatchException();
+                alphaNumSort = BookAlphanumericSortEnum.values()[bufferInput];
+            } catch (InputMismatchException e) {
+                System.err.println("Invalid input");
+            }
+        }
+        
+        switch (displayChoice) {
+            case DISPLAY_BOOKS_IN_LIST:
+                break;
+            case DISPLAY_BOOKS_NOT_IN_LIST:
+                break;
+            case DISPLAY_ALL_BOOKS_IN_APP:
+                break;
+            default:
+                System.err.println("invalid option selected");
+        }
     }
 
     /**
@@ -230,7 +281,7 @@ public class App {
                 throw new LoginFailedException();
             if (!adminCheck)
                 // user is not logging in as admin, block access to that functionality
-                dbReturn.revokeAdmin(); 
+                dbReturn.revokeAdmin();
             USER = dbReturn;
             return true;
         } catch (LoginFailedException e) {
@@ -244,7 +295,7 @@ public class App {
      * 
      * @return
      */
-    /*TODO */
+    /* TODO */
     private static boolean userLogOut() {
         try {
             // if no user has logged in
