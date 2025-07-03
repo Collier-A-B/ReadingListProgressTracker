@@ -11,6 +11,7 @@ public interface BooksDAOInterface {
      */
 
     public List<BookPOJO> getAllBooks();
+
     public BookPOJO getBookById(int id);
     public List<BookPOJO> getBooksByTitle(String title);
     public BookPOJO getBookByISBN(String isbn_13);

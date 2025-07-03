@@ -10,12 +10,14 @@ import com.collier.personal_project.custom_exceptions.ui_exceptions.LoginFailedE
 import com.collier.personal_project.custom_exceptions.ui_exceptions.LogoutFailedException;
 import com.collier.personal_project.dao.book.BooksDAOClass;
 import com.collier.personal_project.dao.user.UsersDAOClass;
+import com.collier.personal_project.dao.user_book.UserBookDAOClass;
 import com.collier.personal_project.dao_model.BookPOJO;
+import com.collier.personal_project.dao_model.ReadingListBookPOJO;
 import com.collier.personal_project.dao_model.UserPOJO;
-import com.collier.personal_project.enumerators.BookAlphanumericSortEnum;
-import com.collier.personal_project.enumerators.BookSortEnum;
-import com.collier.personal_project.enumerators.LoginEnum;
-import com.collier.personal_project.enumerators.ReadingListUserEnum;
+import com.collier.personal_project.enumerators.ui.BookAlphanumericSortEnum;
+import com.collier.personal_project.enumerators.ui.BookSortEnum;
+import com.collier.personal_project.enumerators.ui.LoginEnum;
+import com.collier.personal_project.enumerators.ui.ReadingListUserEnum;
 
 /**
  * Hello world!
@@ -36,7 +38,7 @@ public class App {
 
         final UsersDAOClass usersDAO = new UsersDAOClass();
         final BooksDAOClass booksDAO = new BooksDAOClass();
-        
+        final UserBookDAOClass userBookDAO = new UserBookDAOClass();
 
         try (Scanner scan = new Scanner(System.in)) {
 
@@ -49,7 +51,7 @@ public class App {
 
                 if (USER_LOGGED_IN) {
                     // TODO: menu logic for when a user has successfully logged in
-                    displayReadinglistOptions(scan, booksDAO);
+                    displayReadinglistOptions(scan, booksDAO, userBookDAO);
                 }
             }
         }
@@ -140,7 +142,7 @@ public class App {
      * @param scan
      * @param userDAO
      */
-    private static void displayReadinglistOptions(Scanner scan, BooksDAOClass bookDAO) {
+    private static void displayReadinglistOptions(Scanner scan, BooksDAOClass bookDAO, UserBookDAOClass userBookDAO) {
         ReadingListUserEnum userInput = ReadingListUserEnum.NO_OPTION_SELECTED;
         while (userInput == ReadingListUserEnum.NO_OPTION_SELECTED) {
             try {
@@ -172,6 +174,8 @@ public class App {
             // TODO: Implement option handling logic
             switch (userInput) {
                 case DISPLAY_BOOKS_IN_LIST:
+                    displayReadingListBooks(scan, userBookDAO);
+                    break;
                 case DISPLAY_BOOKS_NOT_IN_LIST:
                 case DISPLAY_ALL_BOOKS_IN_APP:
                     displayBooks(scan, bookDAO, userInput);
@@ -191,23 +195,60 @@ public class App {
         }
     }
 
+    private static void displayReadingListBooks(Scanner scan, UserBookDAOClass userBookDAO) {
+        BookSortEnum bookSort = BookSortEnum.NO_OPTION_SELECTED;
+        BookAlphanumericSortEnum alphaNumSort = BookAlphanumericSortEnum.NO_OPTION_SELECTED;
+
+        while (bookSort == BookSortEnum.NO_OPTION_SELECTED) {
+            try {
+                // each option coresponds to ReadingListUserEnum values, offset by +1
+                System.out.println(String.format("""
+                        \tBook filtering options\n\n
+                        \tPlease select from one of the following options:\n
+                        \t1) Sort by author 
+                        \t2) Sort by genre
+                        \t3) None
+                        """).toCharArray());
+                System.out.print("\tYour Input: ");
+                int bufferInput = scan.nextInt() - 1;
+                if (bufferInput < 0 || bufferInput > 2)
+                    throw new InputMismatchException();
+                bookSort = BookSortEnum.values()[bufferInput];
+            } catch (InputMismatchException e) {
+                System.err.println("Invalid input");
+            }
+        }
+        while (alphaNumSort == BookAlphanumericSortEnum.NO_OPTION_SELECTED){
+            try {
+                System.out.println(String.format("""
+                        \n\n\tEnable alphanumeric sorting\n
+                        \tPlease select from one of the following options:\n
+                        \t1) Yes
+                        \t2) No
+                        """).toCharArray());
+                        System.out.print("\tYour Input: ");
+                int bufferInput = scan.nextInt() - 1;
+                if (bufferInput < 0 || bufferInput > 2)
+                    throw new InputMismatchException();
+                alphaNumSort = BookAlphanumericSortEnum.values()[bufferInput];
+            } catch (InputMismatchException e) {
+                System.err.println("Invalid input");
+            }
+        }
+
+        List<ReadingListBookPOJO> returnList = userBookDAO.getAllBooksInUserList(USER.getUserId());  
+        for (ReadingListBookPOJO book : returnList)
+        {
+            System.out.println(book);
+        }
+    }
+
     /**
      * 
      * @param scan
      * @param userDAO
      */
     private static void displayBooks(Scanner scan, BooksDAOClass bookDAO, ReadingListUserEnum displayChoice) {
-        /*
-         * MOVE THIS BLOCK
-         * \t*) Display books in list by author
-         * \t*) Display books not in list by author
-         * \t*) Display all books in app by author
-         * 
-         * MOVE THIS BLOCK
-         * \t*) Display books in list by genre
-         * \t*) Display books not in list by genre
-         * \t*) Display all books in app by genre
-         */
 
         BookSortEnum bookSort = BookSortEnum.NO_OPTION_SELECTED;
         BookAlphanumericSortEnum alphaNumSort = BookAlphanumericSortEnum.NO_OPTION_SELECTED;
@@ -252,10 +293,6 @@ public class App {
         List<BookPOJO> returnList = new ArrayList<>();  //
 
         switch (displayChoice) {
-            case DISPLAY_BOOKS_IN_LIST:
-                // TODO: Call DAO method
-                
-                break;
             case DISPLAY_BOOKS_NOT_IN_LIST:
                 // TODO: Call DAO method
                 break;

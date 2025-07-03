@@ -1,4 +1,4 @@
-package com.collier.personal_project.enumerators;
+package com.collier.personal_project.enumerators.ui;
 
 public enum ReadingListUserEnum {
     DISPLAY_BOOKS_IN_LIST, DISPLAY_BOOKS_NOT_IN_LIST, DISPLAY_ALL_BOOKS_IN_APP,
