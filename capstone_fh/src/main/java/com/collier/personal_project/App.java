@@ -1,12 +1,16 @@
 package com.collier.personal_project;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.InputMismatchException;
+import java.util.List;
 import java.util.Scanner;
 
 import com.collier.personal_project.custom_exceptions.ui_exceptions.LoginFailedException;
 import com.collier.personal_project.custom_exceptions.ui_exceptions.LogoutFailedException;
+import com.collier.personal_project.dao.book.BooksDAOClass;
 import com.collier.personal_project.dao.user.UsersDAOClass;
+import com.collier.personal_project.dao_model.BookPOJO;
 import com.collier.personal_project.dao_model.UserPOJO;
 import com.collier.personal_project.enumerators.BookAlphanumericSortEnum;
 import com.collier.personal_project.enumerators.BookSortEnum;
@@ -31,6 +35,8 @@ public class App {
                 """).toCharArray());
 
         final UsersDAOClass usersDAO = new UsersDAOClass();
+        final BooksDAOClass booksDAO = new BooksDAOClass();
+        
 
         try (Scanner scan = new Scanner(System.in)) {
 
@@ -43,7 +49,7 @@ public class App {
 
                 if (USER_LOGGED_IN) {
                     // TODO: menu logic for when a user has successfully logged in
-                    displayReadinglistOptions(scan, usersDAO);
+                    displayReadinglistOptions(scan, booksDAO);
                 }
             }
         }
@@ -117,13 +123,14 @@ public class App {
                 System.out.println("username: " + username);
                 System.out.println("password: " + password);
                 if (userInput == LoginEnum.LOGIN_ADMIN)
-                    USER_LOGGED_IN = adminLogin(userDAO, username, password);
+                    USER_LOGGED_IN = userLogIn(userDAO, username, password, true);
                 else
-                    USER_LOGGED_IN = userLogIn(userDAO, username, password);
+                    USER_LOGGED_IN = userLogIn(userDAO, username, password, false);
                 break;
             default:
                 System.err.println("Invalid input detected");
         }
+        System.out.println("******************************************************\n\n");
         return false;
     }
 
@@ -133,7 +140,7 @@ public class App {
      * @param scan
      * @param userDAO
      */
-    private static void displayReadinglistOptions(Scanner scan, UsersDAOClass userDAO) {
+    private static void displayReadinglistOptions(Scanner scan, BooksDAOClass bookDAO) {
         ReadingListUserEnum userInput = ReadingListUserEnum.NO_OPTION_SELECTED;
         while (userInput == ReadingListUserEnum.NO_OPTION_SELECTED) {
             try {
@@ -167,7 +174,7 @@ public class App {
                 case DISPLAY_BOOKS_IN_LIST:
                 case DISPLAY_BOOKS_NOT_IN_LIST:
                 case DISPLAY_ALL_BOOKS_IN_APP:
-                    displayBooks(scan, userDAO, userInput);
+                    displayBooks(scan, bookDAO, userInput);
                     break;
                 case ADD_BOOK_TO_LIST:
                     break;
@@ -189,7 +196,7 @@ public class App {
      * @param scan
      * @param userDAO
      */
-    private static void displayBooks(Scanner scan, UsersDAOClass userDAO, ReadingListUserEnum displayChoice) {
+    private static void displayBooks(Scanner scan, BooksDAOClass bookDAO, ReadingListUserEnum displayChoice) {
         /*
          * MOVE THIS BLOCK
          * \t*) Display books in list by author
@@ -227,7 +234,7 @@ public class App {
         while (alphaNumSort == BookAlphanumericSortEnum.NO_OPTION_SELECTED){
             try {
                 System.out.println(String.format("""
-                        \tEnable alphanumeric sorting\n\n
+                        \n\n\tEnable alphanumeric sorting\n
                         \tPlease select from one of the following options:\n
                         \t1) Yes
                         \t2) No
@@ -242,15 +249,27 @@ public class App {
             }
         }
         
+        List<BookPOJO> returnList = new ArrayList<>();  //
+
         switch (displayChoice) {
             case DISPLAY_BOOKS_IN_LIST:
+                // TODO: Call DAO method
+                
                 break;
             case DISPLAY_BOOKS_NOT_IN_LIST:
+                // TODO: Call DAO method
                 break;
             case DISPLAY_ALL_BOOKS_IN_APP:
+                // TODO: Call DAO method
+                returnList = bookDAO.getAllBooks();
                 break;
             default:
                 System.err.println("invalid option selected");
+        }
+
+        for (BookPOJO book : returnList)
+        {
+            System.out.println(book);
         }
     }
 

@@ -218,6 +218,7 @@ public class UsersDAOClass implements UsersDAOInterface{
                         rs.getTimestamp("updated_at"));
             else
                 throw new UserNotFoundException();
+            return user;
         } catch (ClassNotFoundException e) {
             System.err.println("getUserByUsername threw a ClassNotFoundException: " + e.getMessage());
         } catch (FileNotFoundException e) {
