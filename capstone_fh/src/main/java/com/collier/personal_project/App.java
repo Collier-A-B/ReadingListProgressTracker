@@ -121,13 +121,16 @@ public class App {
                         password = null;
                     }
                 }
-                // TODO: Implement actual login logic with db (user and admin)
-                System.out.println("username: " + username);
-                System.out.println("password: " + password);
+
+                boolean loginSuccess;
                 if (userInput == LoginEnum.LOGIN_ADMIN)
-                    USER_LOGGED_IN = userLogIn(userDAO, username, password, true);
+                    loginSuccess = userLogIn(userDAO, username, password, true);
                 else
-                    USER_LOGGED_IN = userLogIn(userDAO, username, password, false);
+                    loginSuccess = userLogIn(userDAO, username, password, false);
+                
+                if (loginSuccess) {
+                    System.out.println("Login successful!");
+                } 
                 break;
             default:
                 System.err.println("Invalid input detected");
@@ -187,11 +190,16 @@ public class App {
                 case UPDATE_STATUS_OF_BOOK_IN_LIST:
                     break;
                 case LOGOUT:
+                    boolean logoutSuccess = userLogOut();
+                    if (logoutSuccess) {
+                        System.out.println("\n\tLogout successful!");
+                    }
                     break;
                 default:
-                    System.err.println("Invalid selection");
+                    System.err.println("\n\tInvalid selection");
                     break;
             }
+            System.out.println("******************************************************\n\n");
         }
     }
 
@@ -339,6 +347,7 @@ public class App {
                 // user is not logging in as admin, block access to that functionality
                 dbReturn.revokeAdmin();
             USER = dbReturn;
+            USER_LOGGED_IN = true;
             return true;
         } catch (LoginFailedException e) {
             System.err.println("user login attempt failed: " + e.getMessage());
@@ -360,10 +369,11 @@ public class App {
             }
 
             // TODO: LOGOUT LOGIC
-
+            USER = null;
+            USER_LOGGED_IN = false;
             return true;
         } catch (LogoutFailedException e) {
-            System.err.println("user login attempt failed: " + e.getMessage());
+            System.err.println("user logout attempt failed: " + e.getMessage());
         }
         return false;
     }
