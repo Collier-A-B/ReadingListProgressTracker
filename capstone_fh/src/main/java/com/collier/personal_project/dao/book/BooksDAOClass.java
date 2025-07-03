@@ -153,6 +153,65 @@ public class BooksDAOClass implements BooksDAOInterface{
         }
         return false;
     }
+
+    @Override
+    public List<BookPOJO> getBooksNotInReadingList(int userId) {
+        List<BookPOJO> books = new ArrayList<>();
+        
+        try {
+            dbConnection = ConnectionManager.getConnection();
+            System.out.println("Connection established successfully: " + dbConnection.getCatalog());
+
+            String sql = 
+                """ 
+                SELECT  
+                    books.book_id, 
+                    books.author_id, 
+                    books.genre_id, 
+                    books.title AS bookTitle,
+                    books.isbn_13 AS bookIsbn13,
+                    books.publication_date AS publication_date,
+                    books.created_at AS created_at,
+                    books.updated_at AS updated_at
+                FROM users
+                INNER JOIN users_books 
+                    ON users.user_id = users_books.user_id
+                INNER JOIN books 
+                    ON users_books.book_id = books.book_id
+                WHERE users.user_id != ?
+                ORDER BY books.title ASC;
+                """;
+            PreparedStatement ps = dbConnection.prepareStatement(sql);
+            ps.setInt(1, userId);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                int bookId = rs.getInt("book_id");
+                int authorId = rs.getInt("author_id");
+                int genreId = rs.getInt("genre_id");
+                String bookTitle = rs.getString("bookTitle");
+                String isbn13 = rs.getString("bookIsbn13");
+                Date publishDate = rs.getDate("publication_date");
+                Timestamp createdAt = rs.getTimestamp("created_at");
+                Timestamp updatedAt = rs.getTimestamp("updated_at");
+
+                BookPOJO book = new BookPOJO(authorId, bookId, bookTitle, createdAt, genreId, isbn13, publishDate, updatedAt);
+                books.add(book);
+            }
+        } catch (DBReturnNullConnectionException e) {
+            System.err.println("deleteBookById threw a DBReturnNullConnectionException: " + e.getMessage());
+        } catch (SQLException e) {
+            System.err.println("deleteBookById threw a SQLException: " + e.getMessage());
+        } catch (FileNotFoundException e) {
+            System.err.println("deleteBookById threw a FileNotFoundException: " + e.getMessage());
+        } catch (IOException e) {
+            System.err.println("deleteBookById threw a IOException: " + e.getMessage());
+        } catch (ClassNotFoundException e) {
+            System.err.println("deleteBookById threw a ClassNotFoundException: " + e.getMessage());
+        }
+
+        return books;
+    }
     
     @Override
     public List<BookPOJO> getAllBooks() {

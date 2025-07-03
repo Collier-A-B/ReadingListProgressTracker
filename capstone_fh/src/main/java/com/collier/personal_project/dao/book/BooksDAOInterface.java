@@ -11,6 +11,7 @@ public interface BooksDAOInterface {
      */
 
     public List<BookPOJO> getAllBooks();
+    public List<BookPOJO> getBooksNotInReadingList(int userId);
 
     public BookPOJO getBookById(int id);
     public List<BookPOJO> getBooksByTitle(String title);

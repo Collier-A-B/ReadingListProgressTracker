@@ -302,10 +302,10 @@ public class App {
 
         switch (displayChoice) {
             case DISPLAY_BOOKS_NOT_IN_LIST:
-                // TODO: Call DAO method
+                returnList = bookDAO.getBooksNotInReadingList(USER.getUserId());
                 break;
             case DISPLAY_ALL_BOOKS_IN_APP:
-                // TODO: Call DAO method
+                
                 returnList = bookDAO.getAllBooks();
                 break;
             default:
