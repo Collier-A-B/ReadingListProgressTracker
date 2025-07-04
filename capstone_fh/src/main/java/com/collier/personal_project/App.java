@@ -50,7 +50,7 @@ public class App {
                 }
 
                 if (USER_LOGGED_IN) {
-                    // TODO: menu logic for when a user has successfully logged in
+                    
                     displayReadinglistOptions(scan, booksDAO, userBookDAO);
                 }
             }
@@ -207,6 +207,8 @@ public class App {
         BookSortEnum bookSort = BookSortEnum.NO_OPTION_SELECTED;
         BookAlphanumericSortEnum alphaNumSort = BookAlphanumericSortEnum.NO_OPTION_SELECTED;
 
+        /* aditional sorting options can be added here
+
         while (bookSort == BookSortEnum.NO_OPTION_SELECTED) {
             try {
                 // each option coresponds to ReadingListUserEnum values, offset by +1
@@ -242,7 +244,7 @@ public class App {
             } catch (InputMismatchException e) {
                 System.err.println("Invalid input");
             }
-        }
+        }*/
 
         List<ReadingListBookPOJO> returnList = userBookDAO.getAllBooksInUserList(USER.getUserId());  
         for (ReadingListBookPOJO book : returnList)
@@ -261,6 +263,8 @@ public class App {
         BookSortEnum bookSort = BookSortEnum.NO_OPTION_SELECTED;
         BookAlphanumericSortEnum alphaNumSort = BookAlphanumericSortEnum.NO_OPTION_SELECTED;
 
+        /* Aditional sorting options can be added here
+
         while (bookSort == BookSortEnum.NO_OPTION_SELECTED) {
             try {
                 // each option coresponds to ReadingListUserEnum values, offset by +1
@@ -296,7 +300,7 @@ public class App {
             } catch (InputMismatchException e) {
                 System.err.println("Invalid input");
             }
-        }
+        }*/
         
         List<BookPOJO> returnList = new ArrayList<>();  //
 
