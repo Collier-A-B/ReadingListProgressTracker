@@ -47,7 +47,7 @@ create table users_books (
     user_book_id INT PRIMARY KEY AUTO_INCREMENT,
     user_id INT NOT NULL,
     book_id INT NOT NULL,
-    status ENUM('to_read', 'reading', 'completed') DEFAULT 'to_read',
+    status ENUM('NOT_READ', 'IN_PROGRESS', 'COMPLETED') DEFAULT 'NOT_READ',
     start_date DATE,
     end_date DATE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -144,13 +144,14 @@ insert into books (genre_id, author_id, title, publication_date, isbn_13) values
     FOREIGN KEY (book_id) REFERENCES books(book_id)
 */
 -- insert some sample data into users_books
+-- 'NOT_READ', 'IN_PROGRESS', 'COMPLETED'
 insert into users_books (user_id, book_id, status, start_date, end_date) values
-(1, 1, 'completed', '2023-01-01', '2023-01-15'),
-(1, 2, 'reading', '2023-02-01', NULL),
-(2, 3, 'to_read', NULL, NULL),
-(3, 4, 'completed', '2023-03-01', '2023-03-10'),
-(4, 5, 'reading', '2023-04-01', NULL),
-(1, 6, 'to_read', NULL, NULL),
-(2, 7, 'completed', '2023-05-01', '2023-05-20'),
-(3, 8, 'to_read', NULL, NULL),
-(4, 9, 'reading', '2023-06-01', NULL);
+(1, 1, 'COMPLETED', '2023-01-01', '2023-01-15'),
+(1, 2, 'IN_PROGRESS', '2023-02-01', NULL),
+(2, 3, 'NOT_READ', NULL, NULL),
+(3, 4, 'COMPLETED', '2023-03-01', '2023-03-10'),
+(4, 5, 'IN_PROGRESS', '2023-04-01', NULL),
+(1, 6, 'NOT_READ', NULL, NULL),
+(2, 7, 'COMPLETED', '2023-05-01', '2023-05-20'),
+(3, 8, 'NOT_READ', NULL, NULL),
+(4, 9, 'IN_PROGRESS', '2023-06-01', NULL);

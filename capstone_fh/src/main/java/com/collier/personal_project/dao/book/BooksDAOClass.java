@@ -166,8 +166,8 @@ public class BooksDAOClass implements BooksDAOInterface{
                 """ 
                 SELECT  
                     books.book_id, 
-                    books.author_id, 
-                    books.genre_id, 
+                    authors.name AS authorName, 
+                    genres.name AS genreName, 
                     books.title AS bookTitle,
                     books.isbn_13 AS bookIsbn13,
                     books.publication_date AS publication_date,
@@ -178,6 +178,10 @@ public class BooksDAOClass implements BooksDAOInterface{
                     ON users.user_id = users_books.user_id
                 INNER JOIN books 
                     ON users_books.book_id = books.book_id
+                INNER JOIN authors 
+                    ON books.author_id = authors.author_id
+                INNER JOIN genres 
+                    ON books.genre_id = genres.genre_id
                 WHERE users.user_id != ?
                 ORDER BY books.title ASC;
                 """;
@@ -187,15 +191,24 @@ public class BooksDAOClass implements BooksDAOInterface{
 
             while (rs.next()) {
                 int bookId = rs.getInt("book_id");
-                int authorId = rs.getInt("author_id");
-                int genreId = rs.getInt("genre_id");
+                String authorName = rs.getString("authorName");
+                String genreName = rs.getString("genreName");
                 String bookTitle = rs.getString("bookTitle");
                 String isbn13 = rs.getString("bookIsbn13");
                 Date publishDate = rs.getDate("publication_date");
                 Timestamp createdAt = rs.getTimestamp("created_at");
                 Timestamp updatedAt = rs.getTimestamp("updated_at");
 
-                BookPOJO book = new BookPOJO(authorId, bookId, bookTitle, createdAt, genreId, isbn13, publishDate, updatedAt);
+                BookPOJO book = new BookPOJO(
+                    bookId, 
+                    genreName, 
+                    authorName, 
+                    bookTitle, 
+                    publishDate, 
+                    isbn13, 
+                    createdAt, 
+                    updatedAt
+                );
                 books.add(book);
             }
         } catch (DBReturnNullConnectionException e) {
@@ -221,21 +234,46 @@ public class BooksDAOClass implements BooksDAOInterface{
             dbConnection = ConnectionManager.getConnection();
             System.out.println("Connection established successfully: " + dbConnection.getCatalog());
 
-            String sql = "SELECT * FROM books";
+            String sql = """
+            SELECT 
+                books.book_id, 
+                authors.name AS authorName, 
+                genres.name AS genreName, 
+                books.title AS bookTitle,
+                books.isbn_13 AS bookIsbn13,
+                books.publication_date AS publication_date,
+                books.created_at AS created_at,
+                books.updated_at AS updated_at 
+            FROM books
+            INNER JOIN authors 
+                ON books.author_id = authors.author_id
+            INNER JOIN genres 
+                ON books.genre_id = genres.genre_id
+            ORDER BY books.title ASC;
+            """;
             PreparedStatement ps = dbConnection.prepareStatement(sql);
 
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 int bookId = rs.getInt("book_id");
-                int authorId = rs.getInt("author_id");
-                int genreId = rs.getInt("genre_id");
-                String bookTitle = rs.getString("title");
-                String isbn13 = rs.getString("isbn_13");
+                String authorName = rs.getString("authorName");
+                String genreName = rs.getString("genreName");
+                String bookTitle = rs.getString("bookTitle");
+                String isbn13 = rs.getString("bookIsbn13");
                 Date publishDate = rs.getDate("publication_date");
                 Timestamp createdAt = rs.getTimestamp("created_at");
                 Timestamp updatedAt = rs.getTimestamp("updated_at");
             
-                BookPOJO book = new BookPOJO(authorId, bookId, bookTitle, createdAt, genreId, isbn13, publishDate, updatedAt);
+                BookPOJO book = new BookPOJO(
+                    bookId, 
+                    genreName, 
+                    authorName, 
+                    bookTitle, 
+                    publishDate, 
+                    isbn13, 
+                    createdAt, 
+                    updatedAt
+                );
                 books.add(book);
             }
             return books;
@@ -262,20 +300,33 @@ public class BooksDAOClass implements BooksDAOInterface{
             dbConnection = ConnectionManager.getConnection();
             System.out.println("Connection established successfully: " + dbConnection.getCatalog());
 
-            String sql = "SELECT * FROM books WHERE isbn_13 = ?";
+            String sql = """
+                SELECT 
+                    books.book_id, 
+                    authors.name AS authorName, 
+                    genres.name AS genreName, 
+                    books.title AS bookTitle,
+                    books.isbn_13 AS bookIsbn13,
+                    books.publication_date AS publication_date,
+                    books.created_at AS created_at,
+                    books.updated_at AS updated_at
+                FROM books WHERE isbn_13 = ?
+                    
+            """;
             PreparedStatement ps = dbConnection.prepareStatement(sql);
             ps.setString(1, isbn_13);
 
             ResultSet rs = ps.executeQuery();
 
             if (rs.next())
-                book = new BookPOJO(rs.getInt("author_id"),
+                book = new BookPOJO(
                             rs.getInt("book_id"),
-                            rs.getString("title"),
-                            rs.getTimestamp("created_at"),
-                            rs.getInt("genre_id"),
-                            isbn_13,
+                            rs.getString("genreName"),
+                            rs.getString("authorName"),
+                            rs.getString("bookTitle"),
                             rs.getDate("publication_date"),
+                            isbn_13,
+                            rs.getTimestamp("created_at"),
                             rs.getTimestamp("updated_at")
                         );
             else
@@ -305,20 +356,37 @@ public class BooksDAOClass implements BooksDAOInterface{
             dbConnection = ConnectionManager.getConnection();
             System.out.println("Connection established successfully: " + dbConnection.getCatalog());
 
-            String sql = "SELECT * FROM books WHERE book_id = ?";
+            String sql = """
+                SELECT 
+                    books.book_id, 
+                    authors.name AS authorName, 
+                    genres.name AS genreName, 
+                    books.title AS bookTitle,
+                    books.isbn_13 AS bookIsbn13,
+                    books.publication_date AS publication_date,
+                    books.created_at AS created_at,
+                    books.updated_at AS updated_at 
+                FROM books 
+                INNER JOIN authors 
+                    ON books.author_id = authors.author_id
+                INNER JOIN genres 
+                    ON books.genre_id = genres.genre_id
+                WHERE book_id = ?
+            """;
             PreparedStatement ps = dbConnection.prepareStatement(sql);
             ps.setInt(1, id);
 
             ResultSet rs = ps.executeQuery();
 
             if (rs.next())
-                book = new BookPOJO(rs.getInt("author_id"),
-                            id,
-                            rs.getString("title"),
-                            rs.getTimestamp("created_at"),
-                            rs.getInt("genre_id"),
-                            rs.getString("isbn_13"),
+                book = new BookPOJO(
+                            rs.getInt("book_id"),
+                            rs.getString("genreName"),
+                            rs.getString("authorName"),
+                            rs.getString("bookTitle"),
                             rs.getDate("publication_date"),
+                            rs.getString("bookIsbn13"),
+                            rs.getTimestamp("created_at"),
                             rs.getTimestamp("updated_at")
                         );
             else
@@ -348,23 +416,39 @@ public class BooksDAOClass implements BooksDAOInterface{
             dbConnection = ConnectionManager.getConnection();
             System.out.println("Connection established successfully: " + dbConnection.getCatalog());
 
-            String sql = "SELECT * FROM books WHERE title = ?";
+            String sql = """
+            SELECT 
+                books.book_id, 
+                authors.name AS authorName, 
+                genres.name AS genreName, 
+                books.title AS bookTitle,
+                books.isbn_13 AS isbn_13,
+                books.publication_date AS publication_date,
+                books.created_at AS created_at,
+                books.updated_at AS updated_at 
+            FROM books 
+            INNER JOIN authors 
+                ON books.author_id = authors.author_id
+            INNER JOIN genres 
+                ON books.genre_id = genres.genre_id
+            WHERE title = ?
+            """;
             PreparedStatement ps = dbConnection.prepareStatement(sql);
             ps.setString(1, title);
 
             ResultSet rs = ps.executeQuery();
 
             while (rs.next()){
-                int authorId = rs.getInt("author_id");
-                int bookId = rs.getInt("book_id");
-                Timestamp createdAt = rs.getTimestamp("created_at");
-                int genreId = rs.getInt("genre_id");
-                String isbn13 = rs.getString("isbn_13");
-                Date publishDate = rs.getDate("publication_date");
-                Timestamp updatedAt = rs.getTimestamp("updated_at");
-                
-                BookPOJO book = new BookPOJO(authorId, bookId, title, 
-                                createdAt, genreId, isbn13, publishDate, updatedAt);
+                BookPOJO book = new BookPOJO(
+                    rs.getInt("book_id"),
+                    rs.getString("genreName"),
+                    rs.getString("authorName"),
+                    rs.getString("bookTitle"),
+                    rs.getDate("publication_date"),
+                    rs.getString("isbn_13"),
+                    rs.getTimestamp("created_at"),
+                    rs.getTimestamp("updated_at")
+                );
                 books.add(book);
             }
             

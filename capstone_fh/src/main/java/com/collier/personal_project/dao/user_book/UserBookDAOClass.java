@@ -3,7 +3,6 @@ package com.collier.personal_project.dao.user_book;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -28,13 +27,17 @@ public class UserBookDAOClass implements UserBookDAOInterface{
 
             String sql = 
                 """ 
-                SELECT users_books.user_book_id, 
-                    books.title AS bookTitle,
-                    authors.name AS bookAuthor,
-                    genres.name AS bookGenre,
-                    books.isbn_13 AS bookIsbn13,
-                    users_books.start_date AS startDate,
-                    users_books.end_date AS endDate
+                SELECT 
+                    users_books.user_book_id,
+                    books.book_id,
+                    genres.name as genreName,
+                    authors.name as authorName,
+                    books.title,
+                    books.publication_date,
+                    books.isbn_13,
+                    users_books.status,
+                    users_books.start_date,
+                    users_books.end_date
                 FROM users
                 INNER JOIN users_books 
                     ON users.user_id = users_books.user_id
@@ -51,17 +54,20 @@ public class UserBookDAOClass implements UserBookDAOInterface{
             ps.setInt(1, userId);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                int userBookId = rs.getInt("user_book_id");
-                String bookTitle = rs.getString("bookTitle");
-                String bookAuthor = rs.getString("bookAuthor");
-                String bookGenre = rs.getString("bookGenre");
-                String bookIsbn13 = rs.getString("bookIsbn13");
-                Date startDate = rs.getDate("startDate");
-                Date endDate = rs.getDate("endDate");
+                
 
                 ReadingListBookPOJO readingListBook = new ReadingListBookPOJO(
-                    userBookId, bookTitle, bookAuthor, bookGenre, bookIsbn13, startDate, endDate);
-                
+                    rs.getInt("user_book_id"),
+                    rs.getInt("book_id"),
+                    rs.getString("genreName"),
+                    rs.getString("authorName"),
+                    rs.getString("title"),
+                    rs.getDate("publication_date"),
+                    rs.getString("isbn_13"),
+                    rs.getString("status"),
+                    rs.getDate("start_date"),
+                    rs.getDate("end_date")
+                );
                 userBooks.add(readingListBook);
             }
         } catch (ClassNotFoundException e) {
