@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.collier.personal_project.connection.ConnectionManager;
+import com.collier.personal_project.custom_exceptions.database_exceptions.BookPresentReadingListException;
 import com.collier.personal_project.custom_exceptions.database_exceptions.DBReturnNullConnectionException;
 import com.collier.personal_project.dao_model.ReadingListBookPOJO;
 
@@ -82,6 +83,72 @@ public class UserBookDAOClass implements UserBookDAOInterface{
             System.err.println("getAllBooks threw a DBReturnNullConnectionException: " + e.getMessage());
         }
         return userBooks;
+    }
+
+    @Override
+    public boolean addBookToUserListByISBN(int userId, String isbn_13) {
+        try {
+            dbConnection = ConnectionManager.getConnection();
+            System.out.println("Connection established successfully: " + dbConnection.getCatalog());
+
+            String checkBookAlreadyAddedSQL = 
+                """
+                SELECT COUNT(*) FROM users_books 
+                INNER JOIN books ON users_books.book_id = books.book_id
+                WHERE users_books.user_id = ? AND books.isbn_13 = ?;
+                """;
+                PreparedStatement checkPs = dbConnection.prepareStatement(checkBookAlreadyAddedSQL);
+                checkPs.setInt(1, userId);
+                checkPs.setString(2, isbn_13);
+                ResultSet checkRs = checkPs.executeQuery();
+                if (checkRs.next() && checkRs.getInt(1) > 0)
+                {
+                    throw new BookPresentReadingListException();
+                }
+        } catch (BookPresentReadingListException e) {
+            System.err.println("addBookToUserListByISBN threw a BookPresentReadingListException: " + e.getMessage());
+        } catch (ClassNotFoundException e) {
+            System.err.println("addBookToUserListByISBN threw a ClassNotFoundException: " + e.getMessage());
+        } catch (FileNotFoundException e) {
+            System.err.println("addBookToUserListByISBN threw a FileNotFoundException: " + e.getMessage());
+        } catch (IOException e) {
+            System.err.println("addBookToUserListByISBN threw a IOException: " + e.getMessage());
+        } catch (SQLException e) {
+            System.err.println("addBookToUserListByISBN threw a SQLException: " + e.getMessage());
+        } catch (DBReturnNullConnectionException e) {
+            System.err.println("addBookToUserListByISBN threw a DBReturnNullConnectionException: " + e.getMessage());
+        }
+        return false;
+    }
+
+    @Override
+    public boolean removeBookFromUserListByISBN(int userId, String isbn_13) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'removeBookFromUserListByISBN'");
+    }
+
+    @Override
+    public boolean updateBookStatusByISBN(int userId, String isbn_13, String status) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'updateBookStatusByISBN'");
+    }
+
+    @Override
+    public boolean addBookToUserListByBookTitle(int userId, String bookTitle) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'addBookToUserListByBookTitle'");
+    }
+
+    @Override
+    public boolean removeBookFromUserListByBookTitle(int userId, String bookTitle) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'removeBookFromUserListByBookTitle'");
+    }
+
+    @Override
+    public boolean updateBookStatusByBookTitle(int userId, String bookTitle, String status) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'updateBookStatusByBookTitle'");
     }
 
 }

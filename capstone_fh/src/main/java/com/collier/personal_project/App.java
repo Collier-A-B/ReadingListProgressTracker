@@ -326,7 +326,7 @@ public class App {
      * display function that handles administrator options
      */
     private static void displayAdminOptions(Scanner scan, UsersDAOClass userDAO) {
-
+        
     }
 
     /**
