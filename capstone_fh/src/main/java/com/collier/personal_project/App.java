@@ -184,10 +184,13 @@ public class App {
                     displayBooks(scan, bookDAO, userInput);
                     break;
                 case ADD_BOOK_TO_LIST:
+                    addBookToReadingList(scan, userBookDAO, bookDAO);
                     break;
                 case REMOVE_BOOK_FROM_LIST:
+                    removeBookFromReadingList(scan, userBookDAO);
                     break;
                 case UPDATE_STATUS_OF_BOOK_IN_LIST:
+                    updateBookStatusInReadingList(scan, userBookDAO);
                     break;
                 case LOGOUT:
                     boolean logoutSuccess = userLogOut();
@@ -309,7 +312,6 @@ public class App {
                 returnList = bookDAO.getBooksNotInReadingList(USER.getUserId());
                 break;
             case DISPLAY_ALL_BOOKS_IN_APP:
-                
                 returnList = bookDAO.getAllBooks();
                 break;
             default:
@@ -320,6 +322,46 @@ public class App {
         {
             System.out.println(book);
         }
+    }
+
+    private static void addBookToReadingList(Scanner scan, UserBookDAOClass userBookDAO, BooksDAOClass bookDAO) {
+        
+            List<BookPOJO> bookList = bookDAO.getBooksNotInReadingList(USER.getUserId());
+            if (bookList.isEmpty()) {
+                System.out.println("There are no books available to add to your reading list.");
+            } else {
+                System.out.println("Please select a book to add to your reading list:");
+                for (int i = 0; i < bookList.size(); i++) {
+                    System.out.println((i + 1) + ") " + bookList.get(i));
+                }
+                int bookChoice = -1;
+                while (bookChoice < 0 || bookChoice > bookList.size()) {
+                    try {
+                        System.out.print("Enter the number of the book you want to add: ");
+                        bookChoice = scan.nextInt() - 1; // Adjust for zero-based index
+                        if (bookChoice < 0 || bookChoice >= bookList.size()) {
+                            throw new InputMismatchException("Invalid book selection. Please try again.");
+                        }
+                    } catch (InputMismatchException e) {
+                        System.err.println(e.getMessage());
+                        bookChoice = -1;
+                    }
+                }
+                boolean addSuccess = userBookDAO.addBookToUserListByISBN(USER.getUserId(), bookList.get(bookChoice).getIsbn_13());
+                if (addSuccess) {
+                    System.out.println("Book added to your reading list successfully!");
+                } else {
+                    System.err.println("Failed to add book to your reading list.");
+                }
+            }
+        
+        
+    }
+    private static void updateBookStatusInReadingList(Scanner scan, UserBookDAOClass userBookDAO) {
+        
+    }
+    private static void removeBookFromReadingList(Scanner scan, UserBookDAOClass userBookDAO) {
+        
     }
 
     /**
