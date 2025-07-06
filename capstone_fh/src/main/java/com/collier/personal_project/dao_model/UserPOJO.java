@@ -16,12 +16,12 @@ public class UserPOJO {
     private final Timestamp updatedAt;
 
     // Constructor
-    public UserPOJO(int userId, String username, String password, 
+    public UserPOJO(int userId, String username, String password, boolean isAdmin,
                                  Timestamp createdAt, Timestamp updatedAt) {
         this.userId = userId;
         this.username = username;
         this.password = password;
-        this.isAdmin = false;
+        this.isAdmin = isAdmin;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt; 
     }

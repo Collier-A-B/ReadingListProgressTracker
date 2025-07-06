@@ -135,10 +135,11 @@ public class UsersDAOClass implements UsersDAOInterface{
                 int id = rs.getInt("user_id");
                 String username = rs.getString("username");
                 String password = rs.getString("password");
+                boolean isAdmin = rs.getBoolean("is_admin");
                 Timestamp createdAt = rs.getTimestamp("created_at");
                 Timestamp updatedAt = rs.getTimestamp("updated_at");
 
-                UserPOJO user = new UserPOJO(id, username, password, createdAt, updatedAt);
+                UserPOJO user = new UserPOJO(id, username, password, isAdmin, createdAt, updatedAt);
                 users.add(user);
             }
             return users;
@@ -175,6 +176,7 @@ public class UsersDAOClass implements UsersDAOInterface{
                 user = new UserPOJO(id, 
                         rs.getString("username"), 
                         rs.getString("password"), 
+                        rs.getBoolean("is_admin"),
                         rs.getTimestamp("created_at"), 
                         rs.getTimestamp("updated_at"));
             else
@@ -213,7 +215,8 @@ public class UsersDAOClass implements UsersDAOInterface{
             if (rs.next())
                 user = new UserPOJO(rs.getInt("user_id"), 
                         username, 
-                        rs.getString("password"), 
+                        rs.getString("password"),
+                        rs.getBoolean("is_admin"),
                         rs.getTimestamp("created_at"), 
                         rs.getTimestamp("updated_at"));
             else
