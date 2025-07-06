@@ -183,7 +183,50 @@ public class UserBookDAOClass implements UserBookDAOInterface {
     @Override
     public boolean updateBookStatusByISBN(int userId, String isbn_13, String status) {
         
-        return false; 
+        try {
+            dbConnection = ConnectionManager.getConnection();
+            System.out.println("Connection established successfully: " + dbConnection.getCatalog());
+
+            BookPOJO book = booksDAO.getBookByISBN(isbn_13);
+            if (book == null) {
+                throw new BookNotFoundException();
+            }
+
+            if (!checkIfBookAddedToUserList(userId, book.getBookId())) {
+                throw new BookNotPresentInReadingListException();
+            }
+
+            String sql = """
+                UPDATE users_books
+                SET status = ?
+                WHERE user_id = ? AND book_id = ?;
+                    """;
+            PreparedStatement ps = dbConnection.prepareStatement(sql);
+            ps.setInt(1, userId);
+            ps.setInt(2, book.getBookId());
+            int rowsAffected = ps.executeUpdate();
+            if (rowsAffected > 0) {
+                System.out.println("Book with ISBN " + isbn_13 + " removed from user ID " + userId + "'s reading list.");
+                return true;
+            } else {
+                System.err.println("unable to remove book with ISBN " + isbn_13 + " from user's reading list.");
+            }
+        } catch(BookNotFoundException e) {
+            System.err.println("removeBookFromUserListByISBN threw a BookNotFoundException: " + e.getMessage());
+        } catch (ClassNotFoundException e) {
+            System.err.println("removeBookFromUserListByISBN threw a ClassNotFoundException: " + e.getMessage());
+        } catch (FileNotFoundException e) {
+            System.err.println("removeBookFromUserListByISBN threw a FileNotFoundException: " + e.getMessage());
+        } catch (IOException e) {
+            System.err.println("removeBookFromUserListByISBN threw a IOException: " + e.getMessage());
+        } catch (SQLException e) {
+            System.err.println("removeBookFromUserListByISBN threw a SQLException: " + e.getMessage());
+        } catch (DBReturnNullConnectionException e) {
+            System.err.println("removeBookFromUserListByISBN threw a DBReturnNullConnectionException: " + e.getMessage());
+        } catch (BookNotPresentInReadingListException e) {
+            System.err.println("removeBookFromUserListByISBN threw a BookNotPresentInReadingListException: " + e.getMessage());
+        }
+        return false;
     }
 
     // Helper method to check if a book is already added to the user's reading list
