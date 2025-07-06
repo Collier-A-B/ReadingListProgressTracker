@@ -310,7 +310,12 @@ public class BooksDAOClass implements BooksDAOInterface{
                     books.publication_date AS publication_date,
                     books.created_at AS created_at,
                     books.updated_at AS updated_at
-                FROM books WHERE isbn_13 = ?
+                FROM books 
+                INNER JOIN authors
+                    ON books.author_id
+                INNER JOIN genres 
+                    ON books.genre_id = genres.genre_id
+                WHERE isbn_13 = ?
                     
             """;
             PreparedStatement ps = dbConnection.prepareStatement(sql);
