@@ -340,16 +340,16 @@ public class App {
         
             List<BookPOJO> bookList = bookDAO.getBooksNotInReadingList(USER.getUserId());
             if (bookList.isEmpty()) {
-                System.out.println("There are no books available to add to your reading list.");
+                System.out.println("\tThere are no books available to add to your reading list.");
             } else {
-                System.out.println("Please select a book to add to your reading list:");
+                System.out.println("\tPlease select a book to add to your reading list:");
                 for (int i = 0; i < bookList.size(); i++) {
-                    System.out.println((i + 1) + ") " + bookList.get(i));
+                    System.out.println("\t"+(i + 1) + ") " + bookList.get(i));
                 }
                 int bookChoice = -1;
                 while (bookChoice < 0 || bookChoice > bookList.size()) {
                     try {
-                        System.out.print("Enter the number of the book you want to add: ");
+                        System.out.print("\tEnter the number of the book you want to add: ");
                         bookChoice = scan.nextInt() - 1; // Adjust for zero-based index
                         if (bookChoice < 0 || bookChoice >= bookList.size()) {
                             throw new InputMismatchException("Invalid book selection. Please try again.");
@@ -372,11 +372,11 @@ public class App {
     private static void updateBookStatusInReadingList(Scanner scan, UserBookDAOClass userBookDAO) {
         List<ReadingListBookPOJO> readingList = userBookDAO.getAllBooksInUserList(USER.getUserId());
         if (readingList.isEmpty()) {
-            System.out.println("Your reading list is empty. Please add books before updating their status.");
+            System.out.println("\tYour reading list is empty. Please add books before updating their status.");
         } else {
-            System.out.println("Please select a book to update in your reading list:");
+            System.out.println("\tPlease select a book to update in your reading list:");
                 for (int i = 0; i < readingList.size(); i++) {
-                    System.out.println((i + 1) + ") " + readingList.get(i));
+                    System.out.println("\t"+(i + 1) + ") " + readingList.get(i));
                 }
                 int bookChoice = -1;
                 while (bookChoice < 0 || bookChoice > readingList.size()) {
@@ -461,18 +461,18 @@ public class App {
                                                                     readingList.get(bookChoice).getIsbn_13(),
                                                                     newStatus, startDate, endDate);
                 if (updateSuccess) {
-                    System.out.println("Book status updated successfully!");
+                    System.out.println("\tBook status updated successfully!");
                 } else {
-                    System.err.println("Failed to update book status in your reading list.");
+                    System.err.println("\tFailed to update book status in your reading list.");
                 }
         }
     }
     private static void removeBookFromReadingList(Scanner scan, UserBookDAOClass userBookDAO) {
         List<ReadingListBookPOJO> readingList = userBookDAO.getAllBooksInUserList(USER.getUserId());
         if (readingList.isEmpty()) {
-            System.out.println("Your reading list is empty. Please add books before attempting to remove any.");
+            System.out.println("\tYour reading list is empty. Please add books before attempting to remove any.");
         } else {
-            System.out.println("Please select a book to remove from your reading list:\n");
+            System.out.println("\tPlease select a book to remove from your reading list:\n");
                 for (int i = 0; i < readingList.size(); i++) {
                     System.out.println("\t"+(i + 1) + ") " + readingList.get(i));
                 }
