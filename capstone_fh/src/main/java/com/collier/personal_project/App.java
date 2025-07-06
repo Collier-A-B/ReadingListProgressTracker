@@ -79,11 +79,12 @@ public class App {
                         \tPlease select from one of the following options:\n
                         \t1) Login as user
                         \t2) Login as administrator
-                        \t3) Exit Program
+                        \t3) Create a user account
+                        \t4) Exit Program
                         """).toCharArray());
                 System.out.print("\tYour Input: ");
                 int bufferInput = scan.nextInt() - 1;
-                if (bufferInput < 0 || bufferInput > 2)
+                if (bufferInput < 0 || bufferInput > 3)
                     throw new InputMismatchException();
                 userInput = LoginEnum.values()[bufferInput];
 
@@ -132,6 +133,41 @@ public class App {
                 if (loginSuccess) {
                     System.out.println("Login successful!");
                 } 
+                break;
+            case CREATE_USER:
+                String newUsername = null;
+                String newPassword = null;
+
+                while (newUsername == null || newPassword == null) {
+                    try {
+                        System.out.println(String.format("""
+                                \n\n\tPlease enter your desired username and password.
+                                \tYour input must be a valid string with a length
+                                \tgreater than zero.
+                                """).toCharArray());
+
+                        System.out.print("\tUsername: ");
+                        newUsername = scan.next();
+
+                        System.out.print("\tPassword: ");
+                        newPassword = scan.next();
+
+                        if (newUsername.length() == 0 || newPassword.length() == 0)
+                            throw new IOException("Username and password cannot be empty");
+
+                    } catch (IOException e) {
+                        System.err.println("invalid input detected: " + e.getMessage());
+                        newUsername = null;
+                        newPassword = null;
+                    }
+                }
+
+                boolean createSuccess = userDAO.addUser(newUsername, newPassword);
+                if (createSuccess) {
+                    System.out.println("User created successfully!");
+                } else {
+                    System.err.println("Failed to create user. ");
+                }
                 break;
             default:
                 System.err.println("Invalid input detected");
