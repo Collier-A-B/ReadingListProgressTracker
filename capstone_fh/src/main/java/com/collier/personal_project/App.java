@@ -121,14 +121,24 @@ public class App {
                         System.out.println(String.format("""
                                 \n\n\tPlease enter your username and password.
                                 \tYour input must be a valid string with a lenth
-                                \tgreater than zero.
+                                \tgreater than zero and no spaces. leading and trailing
+                                \twhitespace will be trimmed. Your username and password
+                                \tcannot contain spaces.
                                 """).toCharArray());
 
                         System.out.print("\tUsername: ");
-                        username = scan.next();
+                        username = scan.nextLine();
+                        username = username.trim();
+                        if (username.contains(" ")) {
+                            throw new IOException("Username cannot contain spaces");
+                        }
 
                         System.out.print("\tPassword: ");
-                        password = scan.next();
+                        password = scan.nextLine();
+                        password = password.trim();
+                        if (password.contains(" ")) {
+                            throw new IOException("Password cannot contain spaces");
+                        }
 
                         if (username.length() == 0 || password.length() == 0)
                             throw new IOException("Username and password cannot be empty");
@@ -159,14 +169,23 @@ public class App {
                         System.out.println(String.format("""
                                 \n\n\tPlease enter your desired username and password.
                                 \tYour input must be a valid string with a length
-                                \tgreater than zero.
+                                \tgreater than zero. Leading and trailing spaces will be trimmed.
+                                \tYour username and password cannot contain spaces.
                                 """).toCharArray());
 
                         System.out.print("\tUsername: ");
-                        newUsername = scan.next();
+                        newUsername = scan.nextLine();
+                        newUsername = newUsername.trim();
+                        if (newUsername.contains(" ")) {
+                            throw new IOException("Username cannot contain spaces");
+                        }
 
                         System.out.print("\tPassword: ");
-                        newPassword = scan.next();
+                        newPassword = scan.nextLine();
+                        newPassword = newPassword.trim();
+                        if (newPassword.contains(" ")) {
+                            throw new IOException("Password cannot contain spaces");
+                        }
 
                         if (newUsername.length() == 0 || newPassword.length() == 0)
                             throw new IOException("Username and password cannot be empty");
@@ -270,6 +289,7 @@ public class App {
             default:
                 throw new AssertionError();
         }
+        System.out.println("******************************************************\n\n");
     }
 
     /**
@@ -573,7 +593,7 @@ public class App {
                                 \n\tExample: 2023-10-01
                                 """);
                         System.out.print("\tStart Date: ");
-                        String startDateInput = scan.next();
+                        String startDateInput = scan.nextLine();
                         startDate = java.sql.Date.valueOf(startDateInput);
                     } catch (IllegalArgumentException e) {
                         System.err.println("Invalid date format. Please try again.");
@@ -590,7 +610,7 @@ public class App {
                                 \n\tExample: 2023-10-01
                                 """);
                         System.out.print("\tend Date: ");
-                        String startDateInput = scan.next();
+                        String startDateInput = scan.nextLine();
                         endDate = java.sql.Date.valueOf(startDateInput);
                     } catch (IllegalArgumentException e) {
                         System.err.println("Invalid date format. Please try again.");
@@ -648,7 +668,7 @@ public class App {
             try {
                 System.out.println("\n\n\tPlease enter the name of the genre you want to add:");
                 System.out.print("\tGenre Name: ");
-                genreName = scan.next();
+                genreName = scan.nextLine();
                 if (genreName.length() == 0) {
                     throw new IOException("Genre name cannot be empty");
                 }
@@ -695,7 +715,7 @@ public class App {
         while (newGenreName == null) {
             try {
                 System.out.print("\n\tEnter the new name for the selected genre: ");
-                newGenreName = scan.next();
+                newGenreName = scan.nextLine();
                 if (newGenreName.length() == 0) {
                     throw new IOException("Genre name cannot be empty");
                 }
@@ -752,7 +772,7 @@ public class App {
             try {
                 System.out.println("\n\n\tPlease enter the name of the author you want to add:");
                 System.out.print("\tAuthor Name: ");
-                authorName = scan.next();
+                authorName = scan.nextLine();
                 if (authorName.length() == 0) {
                     throw new IOException("Author name cannot be empty");
                 }
@@ -799,7 +819,7 @@ public class App {
         while (newAuthorName == null) {
             try {
                 System.out.print("\n\tEnter the new name for the selected author: ");
-                newAuthorName = scan.next();
+                newAuthorName = scan.nextLine();
                 if (newAuthorName.length() == 0) {
                     throw new IOException("Author name cannot be empty");
                 }
@@ -864,34 +884,36 @@ public class App {
             try {
                 System.out.println("\n\n\tPlease enter the details of the book you want to add:");
                 System.out.print("\tTitle: ");
-                title = scan.next();
+                title = scan.nextLine();
                 if (title.length() == 0) {
                     throw new IOException("Title cannot be empty");
                 }
 
                 System.out.print("\tISBN-13: ");
-                isbn13 = scan.next();
-                if (isbn13.length() != 0) {
+                isbn13 = scan.nextLine();
+                if (isbn13.length() != 13) {
                     throw new IOException("ISBN-13 must be exactly 13 characters long");
                 }
 
                 System.out.print("\tgenre: ");
-                genreName = scan.next();
-                if (genreName.length() != 10) {
+                genreName = scan.nextLine();
+                if (genreName.length() == 0) {
                     throw new IOException("Genre cannot be empty");
                 }
 
                 System.out.print("\tAuthor: ");
-                authorName = scan.next();
+                authorName = scan.nextLine();
                 if (authorName.length() == 0) {
                     throw new IOException("Author cannot be empty");
                 }
 
                 System.out.print("\tPublication date: ");
-                publicationDate = Date.valueOf(scan.next());
+                publicationDate = Date.valueOf(scan.nextLine());
 
             } catch (IOException e) {
                 System.err.println("Invalid input detected: " + e.getMessage());
+            } catch (IllegalArgumentException e) {
+                System.err.println("Invalid date format. Please use YYYY-MM-DD.");
             }
         }
 
@@ -938,25 +960,25 @@ public class App {
                 newAuthorName == null || newPublicationDate == null) {
             try {
                 System.out.print("\n\tEnter the new title for the selected book: ");
-                newTitle = scan.next();
+                newTitle = scan.nextLine();
                 if (newTitle.length() == 0) {
                     throw new IOException("Title cannot be empty");
                 }
 
                 System.out.print("\tEnter the new ISBN-13 for the selected book: ");
-                newIsbn13 = scan.next();
+                newIsbn13 = scan.nextLine();
                 if (newIsbn13.length() != 13) {
                     throw new IOException("ISBN-13 must be exactly 13 characters long");
                 }
 
                 System.out.print("\tEnter the new genre for the selected book: ");
-                newGenreName = scan.next();
+                newGenreName = scan.nextLine();
                 if (newGenreName.length() == 0) {
                     throw new IOException("Genre cannot be empty");
                 }
 
                 System.out.print("\tEnter the new author for the selected book: ");
-                newAuthorName = scan.next();
+                newAuthorName = scan.nextLine();
                 if (newAuthorName.length() == 0) {
                     throw new IOException("Author cannot be empty");
                 }
