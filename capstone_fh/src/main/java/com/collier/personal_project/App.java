@@ -1,6 +1,7 @@
 package com.collier.personal_project;
 
 import java.io.IOException;
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.List;
@@ -405,13 +406,13 @@ public class App {
                         
                         switch (statusChoice) {
                             case 0:
-                                newStatus = "Not Started";
+                                newStatus = "NOT_READ";
                                 break;
                             case 1:
-                                newStatus = "In Progress";
+                                newStatus = "IN_PROGRESS";
                                 break;
                             case 2:
-                                newStatus = "Completed";
+                                newStatus = "COMPLETED";
                                 break;
                             default:
                                 throw new InputMismatchException("Invalid status selection. Please try again.");
@@ -421,11 +422,44 @@ public class App {
                         statusChoice = -1;
                     }
                 }
+                Date startDate = null;
+                Date endDate = null;
+                if ("IN_PROGRESS".equals(newStatus) || "COMPLETED".equals(newStatus)) {
+                    while (startDate == null) {
+                        try {System.out.println("""
+                        \n\n\tPlease enter the date you started reading this book
+                        \n\tFormat: YYYY-MM-DD
+                        \n\tExample: 2023-10-01
+                        """);
+                            System.out.print("\tStart Date: ");
+                            String startDateInput = scan.next();
+                            startDate = java.sql.Date.valueOf(startDateInput);
+                        } catch (IllegalArgumentException e) {
+                            System.err.println("Invalid date format. Please try again.");
+                        }
+                    }
+                }
+
+                if ("COMPLETED".equals(newStatus)) {
+                    while (endDate == null) {
+                        try {System.out.println("""
+                        \n\n\tPlease enter the date you finished reading this book
+                        \n\tFormat: YYYY-MM-DD
+                        \n\tExample: 2023-10-01
+                        """);
+                            System.out.print("\tend Date: ");
+                            String startDateInput = scan.next();
+                            endDate = java.sql.Date.valueOf(startDateInput);
+                        } catch (IllegalArgumentException e) {
+                            System.err.println("Invalid date format. Please try again.");
+                        }
+                    }
+                }
                 
                 boolean updateSuccess = userBookDAO
                                             .updateBookStatusByISBN(USER.getUserId(), 
                                                                     readingList.get(bookChoice).getIsbn_13(),
-                                                                    newStatus);
+                                                                    newStatus, startDate, endDate);
                 if (updateSuccess) {
                     System.out.println("Book status updated successfully!");
                 } else {
@@ -438,14 +472,14 @@ public class App {
         if (readingList.isEmpty()) {
             System.out.println("Your reading list is empty. Please add books before attempting to remove any.");
         } else {
-            System.out.println("Please select a book to remove from your reading list:");
+            System.out.println("Please select a book to remove from your reading list:\n");
                 for (int i = 0; i < readingList.size(); i++) {
-                    System.out.println((i + 1) + ") " + readingList.get(i));
+                    System.out.println("\t"+(i + 1) + ") " + readingList.get(i));
                 }
                 int bookChoice = -1;
                 while (bookChoice < 0 || bookChoice > readingList.size()) {
                     try {
-                        System.out.print("Enter the number of the book you want to remove: ");
+                        System.out.print("\n\n\tEnter the number of the book you want to remove: ");
                         bookChoice = scan.nextInt() - 1; // Adjust for zero-based index
                         if (bookChoice < 0 || bookChoice >= readingList.size()) {
                             throw new InputMismatchException("Invalid book selection. Please try again.");
@@ -455,11 +489,11 @@ public class App {
                         bookChoice = -1;
                     }
                 }
-                boolean addSuccess = userBookDAO.addBookToUserListByISBN(USER.getUserId(), readingList.get(bookChoice).getIsbn_13());
+                boolean addSuccess = userBookDAO.removeBookFromUserListByISBN(USER.getUserId(), readingList.get(bookChoice).getIsbn_13());
                 if (addSuccess) {
-                    System.out.println("Book added to your reading list successfully!");
+                    System.out.println("\tBook removed from your reading list successfully!");
                 } else {
-                    System.err.println("Failed to add book to your reading list.");
+                    System.err.println("\tFailed to remove book from your reading list.");
                 }
         }
     }

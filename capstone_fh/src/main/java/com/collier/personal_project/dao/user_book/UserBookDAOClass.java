@@ -3,6 +3,7 @@ package com.collier.personal_project.dao.user_book;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -181,7 +182,7 @@ public class UserBookDAOClass implements UserBookDAOInterface {
 
     
     @Override
-    public boolean updateBookStatusByISBN(int userId, String isbn_13, String status) {
+    public boolean updateBookStatusByISBN(int userId, String isbn_13, String status, Date startDate, Date endDate) {
         
         try {
             dbConnection = ConnectionManager.getConnection();
@@ -198,12 +199,15 @@ public class UserBookDAOClass implements UserBookDAOInterface {
 
             String sql = """
                 UPDATE users_books
-                SET status = ?
+                SET status = ?, start_date = ?, end_date = ?
                 WHERE user_id = ? AND book_id = ?;
-                    """;
+                """;
             PreparedStatement ps = dbConnection.prepareStatement(sql);
-            ps.setInt(1, userId);
-            ps.setInt(2, book.getBookId());
+            ps.setString(1, status);
+            ps.setDate(2, startDate);
+            ps.setDate(3, endDate);
+            ps.setInt(4, userId);
+            ps.setInt(5, book.getBookId());
             int rowsAffected = ps.executeUpdate();
             if (rowsAffected > 0) {
                 System.out.println("Book with ISBN " + isbn_13 + " removed from user ID " + userId + "'s reading list.");
