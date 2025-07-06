@@ -206,6 +206,11 @@ public class App {
         }
     }
 
+    /**
+     * Display method that handles displaying books in the user's reading list
+     * @param scan
+     * @param userBookDAO
+     */
     private static void displayReadingListBooks(Scanner scan, UserBookDAOClass userBookDAO) {
         BookSortEnum bookSort = BookSortEnum.NO_OPTION_SELECTED;
         BookAlphanumericSortEnum alphaNumSort = BookAlphanumericSortEnum.NO_OPTION_SELECTED;
@@ -257,7 +262,7 @@ public class App {
     }
 
     /**
-     * 
+     * Display method that handles book display options
      * @param scan
      * @param userDAO
      */
@@ -324,6 +329,12 @@ public class App {
         }
     }
 
+    /**
+     * Method that allows user to add a book to their reading list
+     * @param scan
+     * @param userBookDAO
+     * @param bookDAO
+     */
     private static void addBookToReadingList(Scanner scan, UserBookDAOClass userBookDAO, BooksDAOClass bookDAO) {
         
             List<BookPOJO> bookList = bookDAO.getBooksNotInReadingList(USER.getUserId());
@@ -358,10 +369,99 @@ public class App {
         
     }
     private static void updateBookStatusInReadingList(Scanner scan, UserBookDAOClass userBookDAO) {
-        
+        List<ReadingListBookPOJO> readingList = userBookDAO.getAllBooksInUserList(USER.getUserId());
+        if (readingList.isEmpty()) {
+            System.out.println("Your reading list is empty. Please add books before updating their status.");
+        } else {
+            System.out.println("Please select a book to update in your reading list:");
+                for (int i = 0; i < readingList.size(); i++) {
+                    System.out.println((i + 1) + ") " + readingList.get(i));
+                }
+                int bookChoice = -1;
+                while (bookChoice < 0 || bookChoice > readingList.size()) {
+                    try {
+                        System.out.print("Enter the number of the book you want to update: ");
+                        bookChoice = scan.nextInt() - 1; // Adjust for zero-based index
+                        if (bookChoice < 0 || bookChoice >= readingList.size()) {
+                            throw new InputMismatchException("Invalid book selection. Please try again.");
+                        }
+                    } catch (InputMismatchException e) {
+                        System.err.println(e.getMessage());
+                        bookChoice = -1;
+                    }
+                }
+                System.out.println("""
+                        \n\n\tPlease select the new status for the book:\n
+                        \t1) Not Started
+                        \t2) In Progress
+                        \t3) Completed
+                        """);
+                int statusChoice = -1;
+                String newStatus = "";
+                while (statusChoice < 0 || statusChoice > 2) {
+                    try {
+                        System.out.print("Enter the number of the new status: ");
+                        statusChoice = scan.nextInt() - 1; // Adjust for zero-based index
+                        
+                        switch (statusChoice) {
+                            case 0:
+                                newStatus = "Not Started";
+                                break;
+                            case 1:
+                                newStatus = "In Progress";
+                                break;
+                            case 2:
+                                newStatus = "Completed";
+                                break;
+                            default:
+                                throw new InputMismatchException("Invalid status selection. Please try again.");
+                        }
+                    } catch (InputMismatchException e) {
+                        System.err.println(e.getMessage());
+                        statusChoice = -1;
+                    }
+                }
+                
+                boolean updateSuccess = userBookDAO
+                                            .updateBookStatusByISBN(USER.getUserId(), 
+                                                                    readingList.get(bookChoice).getIsbn_13(),
+                                                                    newStatus);
+                if (updateSuccess) {
+                    System.out.println("Book status updated successfully!");
+                } else {
+                    System.err.println("Failed to update book status in your reading list.");
+                }
+        }
     }
     private static void removeBookFromReadingList(Scanner scan, UserBookDAOClass userBookDAO) {
-        
+        List<ReadingListBookPOJO> readingList = userBookDAO.getAllBooksInUserList(USER.getUserId());
+        if (readingList.isEmpty()) {
+            System.out.println("Your reading list is empty. Please add books before attempting to remove any.");
+        } else {
+            System.out.println("Please select a book to remove from your reading list:");
+                for (int i = 0; i < readingList.size(); i++) {
+                    System.out.println((i + 1) + ") " + readingList.get(i));
+                }
+                int bookChoice = -1;
+                while (bookChoice < 0 || bookChoice > readingList.size()) {
+                    try {
+                        System.out.print("Enter the number of the book you want to remove: ");
+                        bookChoice = scan.nextInt() - 1; // Adjust for zero-based index
+                        if (bookChoice < 0 || bookChoice >= readingList.size()) {
+                            throw new InputMismatchException("Invalid book selection. Please try again.");
+                        }
+                    } catch (InputMismatchException e) {
+                        System.err.println(e.getMessage());
+                        bookChoice = -1;
+                    }
+                }
+                boolean addSuccess = userBookDAO.addBookToUserListByISBN(USER.getUserId(), readingList.get(bookChoice).getIsbn_13());
+                if (addSuccess) {
+                    System.out.println("Book added to your reading list successfully!");
+                } else {
+                    System.err.println("Failed to add book to your reading list.");
+                }
+        }
     }
 
     /**
@@ -404,9 +504,8 @@ public class App {
     /**
      * helper function that allows user to log out
      * 
-     * @return
+     * @return true if logout was successful, else false
      */
-    /* TODO */
     private static boolean userLogOut() {
         try {
             // if no user has logged in
@@ -414,7 +513,6 @@ public class App {
                 throw new LogoutFailedException();
             }
 
-            // TODO: LOGOUT LOGIC
             USER = null;
             USER_LOGGED_IN = false;
             return true;
