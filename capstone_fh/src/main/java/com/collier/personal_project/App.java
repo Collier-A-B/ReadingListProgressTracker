@@ -64,9 +64,9 @@ public class App {
                         displayAdminOptions(scan, genreDao, authorDAO, booksDAO);
                     } else {
                         // if user is not admin, display reading list options
-                        System.out.println("\n\tWelcome " + USER.getUsername() + "!");
+                        System.out.println("\tWelcome " + USER.getUsername() + "!");
                         System.out.println("\tYou are logged in as a regular user.");
-                        System.out.println("\tNOTE: if you are an admin, you cannot access administrator options\nwhile logged in as a regular user.");
+                        System.out.println("\tNOTE: if you are an admin, you cannot access administrator options\nwhile logged in as a regular user.\n\n");
                         displayReadinglistOptions(scan, booksDAO, userBookDAO);
                     }
                 }
@@ -204,7 +204,7 @@ public class App {
             try {
                 // each option coresponds to ReadingListAdminEnum values, offset by +1
                 System.out.println(String.format("""
-                        ******************************************************
+                        \n******************************************************
                         \tAdministrator Options\n\n
                         \tPlease select from one of the following options:\n
                         \t1) Add a genre
@@ -237,6 +237,7 @@ public class App {
                 break;
             case ADD_GENRE:
                 addGenre(scan, genreDAO);
+                break;
             case DELETE_GENRE:
                 deleteGenre(scan, genreDAO);
                 break;
@@ -1022,7 +1023,7 @@ public class App {
                 throw new LoginFailedException();
             }
 
-            // TODO: LOGIN LOGIC
+            
             UserPOJO dbReturn = userDAO.getUserByUsername(username);
             if (dbReturn == null || !dbReturn.getPassword().equals(password))
                 throw new LoginFailedException();

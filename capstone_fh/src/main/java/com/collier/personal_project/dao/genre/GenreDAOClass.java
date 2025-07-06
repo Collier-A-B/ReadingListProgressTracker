@@ -27,7 +27,7 @@ public class GenreDAOClass implements GenreDAOInterface{
             dbConnection = ConnectionManager.getConnection();
             System.out.println("Connection established successfully: " + dbConnection.getCatalog());
 
-            String sql = "INSERT INTO genre(name) VALUES(?)";
+            String sql = "INSERT INTO genres(name) VALUES(?)";
             PreparedStatement ps = dbConnection.prepareStatement(sql);
             ps.setString(1, name);
 
@@ -238,7 +238,7 @@ public class GenreDAOClass implements GenreDAOInterface{
             dbConnection = ConnectionManager.getConnection();
             System.out.println("Connection established successfully: " + dbConnection.getCatalog());
 
-            String sql = "UPDATE authors SET name = ? WHERE author_id = ?";
+            String sql = "UPDATE genres SET name = ? WHERE genre_id = ?";
             PreparedStatement ps = dbConnection.prepareStatement(sql);
             ps.setString(1, newName);
             ps.setInt(2, id);
