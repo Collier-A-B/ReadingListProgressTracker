@@ -125,16 +125,20 @@ public class App {
                                 \twhitespace will be trimmed. Your username and password
                                 \tcannot contain spaces.
                                 """).toCharArray());
-
+                        username = "";
                         System.out.print("\tUsername: ");
-                        username = scan.nextLine();
+                        while(username.length() == 0) {
+                            username += scan.nextLine();
+                        }
                         username = username.trim();
                         if (username.contains(" ")) {
-                            throw new IOException("Username cannot contain spaces");
+                            throw new IOException("\nUsername cannot contain spaces");
                         }
 
-                        System.out.print("\tPassword: ");
-                        password = scan.nextLine();
+                        System.out.print("\n\tPassword: ");
+                        password = "";
+                        while(password.length() == 0)
+                            password += scan.nextLine();
                         password = password.trim();
                         if (password.contains(" ")) {
                             throw new IOException("Password cannot contain spaces");
