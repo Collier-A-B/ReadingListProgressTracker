@@ -11,7 +11,5 @@ public interface UserBookDAOInterface {
     public boolean removeBookFromUserListByISBN(int userId, String isbn_13);
     public boolean updateBookStatusByISBN(int userId, String isbn_13, String status);
 
-    public boolean addBookToUserListByBookTitle(int userId, String bookTitle);
-    public boolean removeBookFromUserListByBookTitle(int userId, String bookTitle);
-    public boolean updateBookStatusByBookTitle(int userId, String bookTitle, String status);
+
 }
