@@ -19,6 +19,7 @@ The following are required in order to run/modify this project
 - MySQL DB (locally hosted)
 - Maven
 - IDE/TextEditor
+- DB initialization script (sample one is provided in "/capstone_fh/src/test/resources/init_db.sql" from the project root directory)
 
 ### Soft Requirements (recommendations)
 
