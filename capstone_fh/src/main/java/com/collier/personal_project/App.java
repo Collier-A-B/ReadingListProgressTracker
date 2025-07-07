@@ -79,8 +79,8 @@ public class App {
     /**
      * Console UI function that handle user login and program termination
      * 
-     * @param scan
-     * @param userDAO
+     * @param scan Scanner used for user input
+     * @param userDAO DAO used for accessing user data
      * @return true only if user chooses to terminate the program
      */
     private static boolean displayLoginOptions(Scanner scan, UsersDAOClass userDAO) {
@@ -226,8 +226,8 @@ public class App {
     /**
      * Display method that handles administrator options
      * 
-     * @param scan
-     * @param userDAO
+     * @param scan Scanner used for user input
+     * @param userDAO DAO for accessing user data
      */
     private static void displayAdminOptions(Scanner scan, GenreDAOClass genreDAO,
             AuthorsDAOClass authorDAO, BooksDAOClass bookDAO) {
@@ -310,9 +310,8 @@ public class App {
 
     /**
      * Display method that handles user reading list interaction options
-     * 
-     * @param scan
-     * @param userDAO
+     * @param scan Scanner used for user input
+     * @param userDAO DAO used for user data access
      */
     private static void displayReadinglistOptions(Scanner scan, BooksDAOClass bookDAO, UserBookDAOClass userBookDAO) {
         ReadingListUserEnum userInput = ReadingListUserEnum.NO_OPTION_SELECTED;
@@ -378,9 +377,8 @@ public class App {
 
     /**
      * Display method that handles displaying books in the user's reading list
-     * 
-     * @param scan
-     * @param userBookDAO
+     * @param scan Scanner used for user input
+     * @param userBookDAO DAO used for accessing books in a reader's list
      */
     private static void displayReadingListBooks(Scanner scan, UserBookDAOClass userBookDAO) {
         // BookSortEnum bookSort = BookSortEnum.NO_OPTION_SELECTED;
@@ -436,9 +434,8 @@ public class App {
 
     /**
      * Display method that handles book display options
-     * 
-     * @param scan
-     * @param userDAO
+     * @param scan Scanner used for user input
+     * @param userDAO DAO used to access user data
      */
     private static void displayBooks(Scanner scan, BooksDAOClass bookDAO, ReadingListUserEnum displayChoice) {
 
@@ -552,6 +549,11 @@ public class App {
 
     }
 
+    /**
+     * handles user input for updating a reading list book's status
+     * @param scan Scanner used for user input
+     * @param userBookDAO DAO for accessing user's reading list
+     */
     private static void updateBookStatusInReadingList(Scanner scan, UserBookDAOClass userBookDAO) {
         List<ReadingListBookPOJO> readingList = userBookDAO.getAllBooksInUserList(USER.getUserId());
         if (readingList.isEmpty()) {
@@ -658,6 +660,11 @@ public class App {
         }
     }
 
+    /**
+     * Handles user input for removing book for reading list
+     * @param scan Scanner for user input
+     * @param userBookDAO DAO for accessing user's reading list data
+     */
     private static void removeBookFromReadingList(Scanner scan, UserBookDAOClass userBookDAO) {
         List<ReadingListBookPOJO> readingList = userBookDAO.getAllBooksInUserList(USER.getUserId());
         if (readingList.isEmpty()) {
@@ -690,7 +697,11 @@ public class App {
             }
         }
     }
-
+    /**
+     * handles user input for adding genre to db
+     * @param scan Scanner used for user input
+     * @param genreDAO DAO for accessing genre data
+     */
     private static void addGenre(Scanner scan, GenreDAOClass genreDAO) {
         String genreName = null;
         while (genreName == null) {
@@ -718,6 +729,11 @@ public class App {
         }
     }
 
+    /**
+     * handles user input for updating a genre record
+     * @param scan Scanner for user input
+     * @param genreDAO DAO for accessing genre data
+     */
     private static void updateGenre(Scanner scan, GenreDAOClass genreDAO) {
         List<GenrePOJO> genreList = genreDAO.getAllGenres();
         if (genreList.isEmpty()) {
@@ -768,6 +784,11 @@ public class App {
         }
     }
 
+    /**
+     * handles user input for deleting genre record
+     * @param scan Scanner for user input
+     * @param genreDAO DAO for accessing genre data
+     */
     private static void deleteGenre(Scanner scan, GenreDAOClass genreDAO) {
         List<GenrePOJO> genreList = genreDAO.getAllGenres();
         if (genreList.isEmpty()) {
@@ -802,6 +823,11 @@ public class App {
         }
     }
 
+    /**
+     * handles user input for adding author
+     * @param scan Scanner for user input
+     * @param authorDAO DAO for accessing author data
+     */
     private static void addAuthor(Scanner scan, AuthorsDAOClass authorDAO) {
         String authorName = null;
         while (authorName == null) {
@@ -828,6 +854,11 @@ public class App {
         }
     }
 
+    /**
+     * Handles user input for updating author
+     * @param scan Scanner for user input
+     * @param authorDAO DAO for accessing author data
+     */
     private static void updateAuthor(Scanner scan, AuthorsDAOClass authorDAO) {
         List<AuthorPOJO> authorList = authorDAO.getAllAuthors();
         if (authorList.isEmpty()) {
@@ -878,6 +909,11 @@ public class App {
         }
     }
 
+    /**
+     * handles user input for deleting author
+     * @param scan Scanner for user input
+     * @param authorDAO DAO for accessing author data
+     */
     private static void deleteAuthor(Scanner scan, AuthorsDAOClass authorDAO) {
         List<AuthorPOJO> authorList = authorDAO.getAllAuthors();
         if (authorList.isEmpty()) {
@@ -912,6 +948,11 @@ public class App {
         }
     }
 
+    /**
+     * Handles user input for adding book
+     * @param scan Scanner for user input
+     * @param bookDAO DAO for accessing book data
+     */
     private static void addBook(Scanner scan, BooksDAOClass bookDAO) {
         String title = null;
         String isbn13 = null;
@@ -973,6 +1014,11 @@ public class App {
         }
     }
 
+    /**
+     * handles user input for updating book
+     * @param scan Scanner for user input
+     * @param bookDAO DAO for accessing book data
+     */
     private static void updateBook(Scanner scan, BooksDAOClass bookDAO) {
         List<BookPOJO> bookList = bookDAO.getAllBooks();
         if (bookList.isEmpty()) {
@@ -1060,6 +1106,11 @@ public class App {
         }
     }
 
+    /**
+     * handles user input for deleting book
+     * @param scan Scanner for user input
+     * @param bookDAO DAO for book data access
+     */
     private static void deleteBook(Scanner scan, BooksDAOClass bookDAO) {
         List<BookPOJO> bookList = bookDAO.getAllBooks();
         if (bookList.isEmpty()) {
@@ -1095,9 +1146,12 @@ public class App {
     }
 
     /**
-     * helper function that allows user to log in
-     * 
-     * @return true if login was successful, else false
+     * Helper function that handles login logic
+     * @param userDAO DAO for accessing user data
+     * @param username username supplied by the user
+     * @param password password supplied by the user
+     * @param adminCheck boolean flag used to determine between admin and user login
+     * @return true if login successful, else false
      */
     private static boolean userLogIn(UsersDAOClass userDAO, String username, String password, boolean adminCheck) {
         try {
@@ -1124,9 +1178,8 @@ public class App {
     }
 
     /**
-     * helper function that allows user to log out
-     * 
-     * @return true if logout was successful, else false
+     * helper function that handles logout logic
+     * @return true if logout successful, else false
      */
     private static boolean userLogOut() {
         try {
