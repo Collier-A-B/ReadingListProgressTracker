@@ -20,12 +20,19 @@ The following are required in order to run/modify this project
 - Maven
 - IDE/TextEditor
 - DB initialization script (sample one is provided in "/capstone_fh/src/test/resources/init_db.sql" from the project root directory)
+- config.properties: file is provided in "/capstone_fh/src/main/resources" and "/capstone_fh/src/test/resources".  
+This file is configured with the connection properties needed to connect to the locally hosted  
+db on my pc, and will most likely not work for you out of the box.  
+Change the username and password to username and password you used when creating your MySQL instance.  
+You may also need to change the url, depending on where your db is hosted
 
 ### Soft Requirements (recommendations)
 
 The following are not strictly required to run/modify this project, but are what I used in when developing/testing this project
 
 - MySQL Workbench (for testing db interactions)
+    - In my setup, I hosted the db in WSL and setup MySQL Workbench in windows.  
+    This is not required, but is what worked best for me
 - VSCode (Other IDEs should work as well)
 
 ## Using the application
