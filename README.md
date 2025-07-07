@@ -19,7 +19,9 @@ The following are required in order to run/modify this project
 - MySQL DB (locally hosted)
 - Maven
 - IDE/TextEditor
-- DB initialization script (sample one is provided in "/capstone_fh/src/test/resources/init_db.sql" from the project root directory)
+- DB initialization script: provided in "/capstone_fh/src/test/resources/init_db.sql" from the project root directory.  
+This is used to initialize the database and populates it with some sample data.  
+I ran this script through MySQL workbench, although this isn't a strict requirement
 - config.properties: file is provided in "/capstone_fh/src/main/resources" and "/capstone_fh/src/test/resources".  
 This file is configured with the connection properties needed to connect to the locally hosted  
 db on my pc, and will most likely not work for you out of the box.  
