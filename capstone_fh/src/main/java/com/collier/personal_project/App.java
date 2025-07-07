@@ -66,7 +66,8 @@ public class App {
                         // if user is not admin, display reading list options
                         System.out.println("\tWelcome " + USER.getUsername() + "!");
                         System.out.println("\tYou are logged in as a regular user.");
-                        System.out.println("\tNOTE: if you are an admin, you cannot access administrator options\nwhile logged in as a regular user.\n\n");
+                        System.out.println(
+                                "\tNOTE: if you are an admin, you cannot access administrator options\nwhile logged in as a regular user.\n\n");
                         displayReadinglistOptions(scan, booksDAO, userBookDAO);
                     }
                 }
@@ -106,6 +107,7 @@ public class App {
 
             } catch (InputMismatchException e) {
                 System.err.println("Your selection must be an integer value listed above");
+                scan.nextLine();
             }
         }
         switch (userInput) {
@@ -127,7 +129,7 @@ public class App {
                                 """).toCharArray());
                         username = "";
                         System.out.print("\tUsername: ");
-                        while(username.length() == 0) {
+                        while (username.length() == 0) {
                             username += scan.nextLine();
                         }
                         username = username.trim();
@@ -137,7 +139,7 @@ public class App {
 
                         System.out.print("\n\tPassword: ");
                         password = "";
-                        while(password.length() == 0)
+                        while (password.length() == 0)
                             password += scan.nextLine();
                         password = password.trim();
                         if (password.contains(" ")) {
@@ -161,7 +163,7 @@ public class App {
                     loginSuccess = userLogIn(userDAO, username, password, false);
 
                 if (loginSuccess) {
-                    System.out.println("Login successful!");
+                    System.out.println("\tLogin successful!");
                 }
                 break;
             case CREATE_USER:
@@ -178,15 +180,21 @@ public class App {
                                 """).toCharArray());
 
                         System.out.print("\tUsername: ");
-                        newUsername = scan.nextLine();
+                        newUsername = "";
+                        while (newUsername.length() == 0)
+                            newUsername += scan.nextLine();
                         newUsername = newUsername.trim();
+
                         if (newUsername.contains(" ")) {
                             throw new IOException("Username cannot contain spaces");
                         }
 
                         System.out.print("\tPassword: ");
-                        newPassword = scan.nextLine();
+                        newPassword = "";
+                        while (newPassword.length() == 0)
+                            newPassword += scan.nextLine();
                         newPassword = newPassword.trim();
+
                         if (newPassword.contains(" ")) {
                             throw new IOException("Password cannot contain spaces");
                         }
@@ -203,9 +211,9 @@ public class App {
 
                 boolean createSuccess = userDAO.addUser(newUsername, newPassword);
                 if (createSuccess) {
-                    System.out.println("User created successfully!");
+                    System.out.println("\tUser created successfully!");
                 } else {
-                    System.err.println("Failed to create user. ");
+                    System.err.println("\tFailed to create user. ");
                 }
                 break;
             default:
@@ -217,11 +225,12 @@ public class App {
 
     /**
      * Display method that handles administrator options
+     * 
      * @param scan
      * @param userDAO
      */
-    private static void displayAdminOptions(Scanner scan, GenreDAOClass genreDAO, 
-                                            AuthorsDAOClass authorDAO, BooksDAOClass bookDAO) {
+    private static void displayAdminOptions(Scanner scan, GenreDAOClass genreDAO,
+            AuthorsDAOClass authorDAO, BooksDAOClass bookDAO) {
         ReadingListAdminEnum userInput = ReadingListAdminEnum.NO_OPTION_SELECTED;
         while (userInput == ReadingListAdminEnum.NO_OPTION_SELECTED) {
             try {
@@ -244,14 +253,17 @@ public class App {
 
                         \t10) Logout
                         """).toCharArray());
+
                 System.out.print("\tYour Input: ");
                 int bufferInput = scan.nextInt() - 1;
                 if (bufferInput < 0 || bufferInput > 9)
                     throw new InputMismatchException();
+
                 userInput = ReadingListAdminEnum.values()[bufferInput];
 
             } catch (InputMismatchException e) {
                 System.err.println("Your selection must be an integer value listed above");
+                scan.nextLine();
             }
         }
         switch (userInput) {
@@ -273,7 +285,7 @@ public class App {
             case DELETE_AUTHOR:
                 deleteAuthor(scan, authorDAO);
                 break;
-            case ADD_BOOK:  
+            case ADD_BOOK:
                 addBook(scan, bookDAO);
                 break;
             case UPDATE_BOOK:
@@ -329,6 +341,7 @@ public class App {
 
             } catch (InputMismatchException e) {
                 System.err.println("Your selection must be an integer value listed above");
+                scan.nextLine();
             }
 
             // TODO: Implement option handling logic
@@ -495,9 +508,10 @@ public class App {
     /**
      * Method that allows user to add a book to their reading list
      * 
-     * @param scan Scanner used for user input
-     * @param userBookDAO UserBookDAOClass instance used to interact with user_book data
-     * @param bookDAO BooksDAOClass instance used to interact with book data
+     * @param scan        Scanner used for user input
+     * @param userBookDAO UserBookDAOClass instance used to interact with user_book
+     *                    data
+     * @param bookDAO     BooksDAOClass instance used to interact with book data
      */
     private static void addBookToReadingList(Scanner scan, UserBookDAOClass userBookDAO, BooksDAOClass bookDAO) {
 
@@ -518,16 +532,21 @@ public class App {
                         throw new InputMismatchException("Invalid book selection. Please try again.");
                     }
                 } catch (InputMismatchException e) {
-                    System.err.println(e.getMessage());
+                    if(e.getMessage() != null)
+                        System.err.println(e.getMessage());
+                    else {
+                        System.err.println("Invalid Input");
+                    }
                     bookChoice = -1;
+                    scan.nextLine();
                 }
             }
             boolean addSuccess = userBookDAO.addBookToUserListByISBN(USER.getUserId(),
                     bookList.get(bookChoice).getIsbn_13());
             if (addSuccess) {
-                System.out.println("Book added to your reading list successfully!");
+                System.out.println("\tBook added to your reading list successfully!");
             } else {
-                System.err.println("Failed to add book to your reading list.");
+                System.err.println("\tFailed to add book to your reading list.");
             }
         }
 
@@ -545,14 +564,18 @@ public class App {
             int bookChoice = -1;
             while (bookChoice < 0 || bookChoice > readingList.size()) {
                 try {
-                    System.out.print("Enter the number of the book you want to update: ");
+                    System.out.print("\tEnter the number of the book you want to update: ");
                     bookChoice = scan.nextInt() - 1; // Adjust for zero-based index
                     if (bookChoice < 0 || bookChoice >= readingList.size()) {
                         throw new InputMismatchException("Invalid book selection. Please try again.");
                     }
                 } catch (InputMismatchException e) {
-                    System.err.println(e.getMessage());
+                    if(e.getMessage() != null)
+                        System.err.println(e.getMessage());
+                    else
+                        System.err.println("Invalid Input");
                     bookChoice = -1;
+                    scan.nextLine();
                 }
             }
             System.out.println("""
@@ -565,7 +588,7 @@ public class App {
             String newStatus = "";
             while (statusChoice < 0 || statusChoice > 2) {
                 try {
-                    System.out.print("Enter the number of the new status: ");
+                    System.out.print("\tEnter the number of the new status: ");
                     statusChoice = scan.nextInt() - 1; // Adjust for zero-based index
 
                     switch (statusChoice) {
@@ -584,6 +607,7 @@ public class App {
                 } catch (InputMismatchException e) {
                     System.err.println(e.getMessage());
                     statusChoice = -1;
+                    scan.nextLine();
                 }
             }
             Date startDate = null;
@@ -597,7 +621,7 @@ public class App {
                                 \n\tExample: 2023-10-01
                                 """);
                         System.out.print("\tStart Date: ");
-                        String startDateInput = scan.nextLine();
+                        String startDateInput = scan.next();
                         startDate = java.sql.Date.valueOf(startDateInput);
                     } catch (IllegalArgumentException e) {
                         System.err.println("Invalid date format. Please try again.");
@@ -614,7 +638,7 @@ public class App {
                                 \n\tExample: 2023-10-01
                                 """);
                         System.out.print("\tend Date: ");
-                        String startDateInput = scan.nextLine();
+                        String startDateInput = scan.next();
                         endDate = java.sql.Date.valueOf(startDateInput);
                     } catch (IllegalArgumentException e) {
                         System.err.println("Invalid date format. Please try again.");
@@ -654,6 +678,7 @@ public class App {
                 } catch (InputMismatchException e) {
                     System.err.println(e.getMessage());
                     bookChoice = -1;
+                    scan.nextLine();
                 }
             }
             boolean addSuccess = userBookDAO.removeBookFromUserListByISBN(USER.getUserId(),
@@ -672,7 +697,10 @@ public class App {
             try {
                 System.out.println("\n\n\tPlease enter the name of the genre you want to add:");
                 System.out.print("\tGenre Name: ");
-                genreName = scan.nextLine();
+                genreName = "";
+                while(genreName.length() == 0)
+                    genreName = scan.nextLine();
+                
                 if (genreName.length() == 0) {
                     throw new IOException("Genre name cannot be empty");
                 }
@@ -684,9 +712,9 @@ public class App {
 
         boolean addSuccess = genreDAO.addGenre(genreName);
         if (addSuccess) {
-            System.out.println("Genre added successfully!");
+            System.out.println("\tGenre added successfully!");
         } else {
-            System.err.println("Failed to add genre.");
+            System.err.println("\tFailed to add genre.");
         }
     }
 
@@ -712,6 +740,7 @@ public class App {
             } catch (InputMismatchException e) {
                 System.err.println(e.getMessage());
                 genreChoice = -1;
+                scan.nextLine();
             }
         }
 
@@ -719,7 +748,9 @@ public class App {
         while (newGenreName == null) {
             try {
                 System.out.print("\n\tEnter the new name for the selected genre: ");
-                newGenreName = scan.nextLine();
+                newGenreName = "";
+                while(newGenreName.length() == 0)
+                    newGenreName = scan.nextLine();
                 if (newGenreName.length() == 0) {
                     throw new IOException("Genre name cannot be empty");
                 }
@@ -731,9 +762,9 @@ public class App {
 
         boolean updateSuccess = genreDAO.updateGenreById(genreList.get(genreChoice).getGenreId(), newGenreName);
         if (updateSuccess) {
-            System.out.println("Genre updated successfully!");
+            System.out.println("\tGenre updated successfully!");
         } else {
-            System.err.println("Failed to update genre.");
+            System.err.println("\tFailed to update genre.");
         }
     }
 
@@ -759,14 +790,15 @@ public class App {
             } catch (InputMismatchException e) {
                 System.err.println(e.getMessage());
                 genreChoice = -1;
+                scan.nextLine();
             }
         }
 
         boolean deleteSuccess = genreDAO.deleteGenreById(genreList.get(genreChoice).getGenreId());
         if (deleteSuccess) {
-            System.out.println("Genre deleted successfully!");
+            System.out.println("\tGenre deleted successfully!");
         } else {
-            System.err.println("Failed to delete genre.");
+            System.err.println("\tFailed to delete genre.");
         }
     }
 
@@ -776,7 +808,9 @@ public class App {
             try {
                 System.out.println("\n\n\tPlease enter the name of the author you want to add:");
                 System.out.print("\tAuthor Name: ");
-                authorName = scan.nextLine();
+                authorName = "";
+                while(authorName.length() == 0)
+                    authorName = scan.nextLine();
                 if (authorName.length() == 0) {
                     throw new IOException("Author name cannot be empty");
                 }
@@ -788,9 +822,9 @@ public class App {
 
         boolean addSuccess = authorDAO.addAuthor(authorName);
         if (addSuccess) {
-            System.out.println("Author added successfully!");
+            System.out.println("\tAuthor added successfully!");
         } else {
-            System.err.println("Failed to add author.");
+            System.err.println("\tFailed to add author.");
         }
     }
 
@@ -816,6 +850,7 @@ public class App {
             } catch (InputMismatchException e) {
                 System.err.println(e.getMessage());
                 authorChoice = -1;
+                scan.nextLine();
             }
         }
 
@@ -823,7 +858,9 @@ public class App {
         while (newAuthorName == null) {
             try {
                 System.out.print("\n\tEnter the new name for the selected author: ");
-                newAuthorName = scan.nextLine();
+                newAuthorName = "";
+                while(newAuthorName.length() == 0)
+                    newAuthorName = scan.nextLine();
                 if (newAuthorName.length() == 0) {
                     throw new IOException("Author name cannot be empty");
                 }
@@ -835,9 +872,9 @@ public class App {
 
         boolean updateSuccess = authorDAO.updateAuthorById(authorList.get(authorChoice).getAuthorId(), newAuthorName);
         if (updateSuccess) {
-            System.out.println("Author updated successfully!");
+            System.out.println("\tAuthor updated successfully!");
         } else {
-            System.err.println("Failed to update author.");
+            System.err.println("\tFailed to update author.");
         }
     }
 
@@ -863,14 +900,15 @@ public class App {
             } catch (InputMismatchException e) {
                 System.err.println(e.getMessage());
                 authorChoice = -1;
+                scan.nextLine();
             }
         }
 
         boolean deleteSuccess = authorDAO.deleteAuthorById(authorList.get(authorChoice).getAuthorId());
         if (deleteSuccess) {
-            System.out.println("Author deleted successfully!");
+            System.out.println("\tAuthor deleted successfully!");
         } else {
-            System.err.println("Failed to delete author.");
+            System.err.println("\tFailed to delete author.");
         }
     }
 
@@ -881,37 +919,43 @@ public class App {
         String authorName = null;
         Date publicationDate = null;
 
-
-
-        while (title == null || isbn13 == null || genreName == null || 
+        while (title == null || isbn13 == null || genreName == null ||
                 authorName == null || publicationDate == null) {
             try {
                 System.out.println("\n\n\tPlease enter the details of the book you want to add:");
                 System.out.print("\tTitle: ");
-                title = scan.nextLine();
+                title = "";
+                while(title.length() == 0)
+                    title = scan.nextLine();
                 if (title.length() == 0) {
                     throw new IOException("Title cannot be empty");
                 }
 
                 System.out.print("\tISBN-13: ");
-                isbn13 = scan.nextLine();
+                isbn13 = "";
+                while(isbn13.length() == 0)
+                    isbn13 = scan.nextLine();
                 if (isbn13.length() != 13) {
                     throw new IOException("ISBN-13 must be exactly 13 characters long");
                 }
 
                 System.out.print("\tgenre: ");
-                genreName = scan.nextLine();
+                genreName = "";
+                while(genreName.length() == 0)
+                    genreName = scan.nextLine();
                 if (genreName.length() == 0) {
                     throw new IOException("Genre cannot be empty");
                 }
 
                 System.out.print("\tAuthor: ");
-                authorName = scan.nextLine();
+                authorName = "";
+                while(authorName.length() == 0)
+                    authorName = scan.nextLine();
                 if (authorName.length() == 0) {
                     throw new IOException("Author cannot be empty");
                 }
 
-                System.out.print("\tPublication date: ");
+                System.out.print("\tPublication date(YYYY-MM-DD): ");
                 publicationDate = Date.valueOf(scan.nextLine());
 
             } catch (IOException e) {
@@ -923,9 +967,9 @@ public class App {
 
         boolean addSuccess = bookDAO.addBook(title, publicationDate, isbn13, genreName, authorName);
         if (addSuccess) {
-            System.out.println("Book added successfully!");
+            System.out.println("\tBook added successfully!");
         } else {
-            System.err.println("Failed to add book.");
+            System.err.println("\tFailed to add book.");
         }
     }
 
@@ -949,40 +993,52 @@ public class App {
                     throw new InputMismatchException("Invalid book selection. Please try again.");
                 }
             } catch (InputMismatchException e) {
-                System.err.println(e.getMessage());
+                if(e.getMessage() != null)
+                    System.err.println(e.getMessage());
+                else
+                    System.err.println("Invalid Input");
                 bookChoice = -1;
+                scan.nextLine();
             }
         }
-        
+
         String newTitle = null;
         String newIsbn13 = null;
         String newGenreName = null;
         String newAuthorName = null;
         Date newPublicationDate = null;
 
-        while (newTitle == null || newIsbn13 == null || newGenreName == null || 
+        while (newTitle == null || newIsbn13 == null || newGenreName == null ||
                 newAuthorName == null || newPublicationDate == null) {
             try {
                 System.out.print("\n\tEnter the new title for the selected book: ");
-                newTitle = scan.nextLine();
+                newTitle = "";
+                while(newTitle.length() == 0)
+                    newTitle = scan.nextLine();
                 if (newTitle.length() == 0) {
                     throw new IOException("Title cannot be empty");
                 }
 
                 System.out.print("\tEnter the new ISBN-13 for the selected book: ");
-                newIsbn13 = scan.nextLine();
+                newIsbn13 = "";
+                while(newIsbn13.length() == 0)
+                    newIsbn13 = scan.nextLine();
                 if (newIsbn13.length() != 13) {
                     throw new IOException("ISBN-13 must be exactly 13 characters long");
                 }
 
                 System.out.print("\tEnter the new genre for the selected book: ");
-                newGenreName = scan.nextLine();
+                newGenreName = "";
+                while(newGenreName.length() == 0)
+                    newGenreName = scan.nextLine();
                 if (newGenreName.length() == 0) {
                     throw new IOException("Genre cannot be empty");
                 }
 
                 System.out.print("\tEnter the new author for the selected book: ");
-                newAuthorName = scan.nextLine();
+                newAuthorName = "";
+                while(newAuthorName.length() == 0)
+                    newAuthorName = scan.nextLine();
                 if (newAuthorName.length() == 0) {
                     throw new IOException("Author cannot be empty");
                 }
@@ -998,11 +1054,11 @@ public class App {
                 bookList.get(bookChoice).getBookId(),
                 newTitle, newPublicationDate, newIsbn13, newGenreName, newAuthorName);
         if (updateSuccess) {
-            System.out.println("Book updated successfully!");
+            System.out.println("\tBook updated successfully!");
         } else {
-            System.err.println("Failed to update book.");
+            System.err.println("\tFailed to update book.");
         }
-    }        
+    }
 
     private static void deleteBook(Scanner scan, BooksDAOClass bookDAO) {
         List<BookPOJO> bookList = bookDAO.getAllBooks();
@@ -1026,14 +1082,15 @@ public class App {
             } catch (InputMismatchException e) {
                 System.err.println(e.getMessage());
                 bookChoice = -1;
+                scan.nextLine();
             }
         }
 
         boolean deleteSuccess = bookDAO.deleteBookById(bookList.get(bookChoice).getBookId());
         if (deleteSuccess) {
-            System.out.println("Book deleted successfully!");
+            System.out.println("\tBook deleted successfully!");
         } else {
-            System.err.println("Failed to delete book.");
+            System.err.println("\tFailed to delete book.");
         }
     }
 
@@ -1049,7 +1106,6 @@ public class App {
                 throw new LoginFailedException();
             }
 
-            
             UserPOJO dbReturn = userDAO.getUserByUsername(username);
             if (dbReturn == null || !dbReturn.getPassword().equals(password))
                 throw new LoginFailedException();
