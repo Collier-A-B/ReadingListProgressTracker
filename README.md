@@ -1,16 +1,60 @@
-# ReadingListProgressTracker
+# README
 
-A Java application that tracks users' reading list progress
+## About This Project
 
-## Setup: Before you try and run this application
+This is my submission for Cognixia Future Horizons Capstone Project
 
-***NOTE***: When refrencing files and file paths, I will be using Linux notation, since that is the platform I am developing on.  
-Unless otherwise specified, "/" at the beginning of the filepath refers to the root directory of the git repository.  
-For example: `/Documents` refers to the "Documents" directory within the root directory of the project.
+For this project, I created an application that allows users to create their own  
+reading list from the books available in the application
 
-1. Navigate to file location: "/ReadingListProgressTracker/capstone_fh/resources/init_db.md"
-    - read and follow the instructions written here
-    - this file explains the init_db.sql file, which is used to initialize the db this application uses
-1. Navigate to file location: "/ReadingListProgressTracker/capstone_fh/resources/config.md"
-    - read and follow the instructions written here
-    - this file explains the config.properties file, which is not neccessarily configured properly for your setup
+This is a terminal based application (text-only UI). Any outputs will be printed to the terminal, and the user will be prompted for input through the terminal.
+
+## Setup
+
+## Using the application
+
+This application has two major modes that can be accessed,  
+depending on the user's privileges:
+
+1. User:  grants access to the user's reading list and the available options  
+for editing and viewing it
+2. Admin: grants access to administrator options for interacting with the database
+
+***NOTE: when logged in as an administrator, you cannot access your reading list***
+
+### Login Page
+
+This is the "page" that is first displayed in the console.
+
+The main options are
+
+1. Login as user: allows user to access their reading list (available to all users)
+2. Login as admin: allows user to write to database tables other than users_books (available only to admin users)
+3. Create user account: allows user to create account with user privileges (cannot create admin account)
+4. Exit Program
+
+### User Mode
+
+This is the "page" that is displayed when a user logs in as a user
+
+The main functionalities available in user mode are
+
+1. Display books in your reading list
+2. Display books not added to your reading list
+3. Display all books available in application
+4. Add book to your list
+5. Remove book from your list
+6. Update status of book in your list
+7. Logout of application
+
+### Admin Mode
+
+This is the "page" that is displayed when a user logs in as an admin
+
+The main functionalities available in admin mode are
+
+1. Add
+2. Update
+3. delete
+
+This applies for authors, genres, books tables in database
