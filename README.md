@@ -11,6 +11,22 @@ This is a terminal based application (text-only UI). Any outputs will be printed
 
 ## Setup
 
+### Hard Requirements
+
+The following are required in order to run/modify this project
+
+- Java 17+
+- MySQL DB (locally hosted)
+- Maven
+- IDE/TextEditor
+
+### Soft Requirements (recommendations)
+
+The following are not strictly required to run/modify this project, but are what I used in when developing/testing this project
+
+- MySQL Workbench (for testing db interactions)
+- VSCode (Other IDEs should work as well)
+
 ## Using the application
 
 This application has two major modes that can be accessed,  
